@@ -1,0 +1,31 @@
+{% extends 'database/base.html' %}
+{% block content %}
+<form method="post">
+    <table>
+        <tr>
+            <td>Company Name</td>
+            <td><strong>{{ user.company_name }}</strong></td>
+        </tr>
+        <tr>
+            <td>Supplier ID</td>
+            <td><strong>{{ supplier.supplier_id }}</strong></td>
+        </tr>
+        <tr>
+            <td>Address</td>
+            <td><strong>{{ supplier.address }}</strong></td>
+        </tr>
+        <tr>
+            <td>Phone Number</td>
+            <td><strong>{{ supplier.phone_number }}</strong></td>
+        </tr>
+        <tr>
+            <td>Category</td>
+            <td><strong>{{ supplier.category }}</strong></td>
+        </tr>
+        <tr>
+            <td>Revenue</td>
+            <td><strong>{{ supplier.revenue }}</strong></td>
+        </tr>
+    </table>
+</form>
+{% endblock content %}

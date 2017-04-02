@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>registered users</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<table>
+    <colgroup>
+        <col span="10">
+    </colgroup>
+    <tr>
+        <th> name </th>
+        <th> username </th>
+        <th> password </th>
+    </tr>
+    {% for registered_user in registered_users %}
+        <tr>
+            <td>{{registered_user.name}}</td>
+            <td>{{registered_user.user_name}}</td>
+            <td>{{registered_user.password}}</td>
+        </tr>
+    {% endfor %}
+
+</table>
+</body>
+</html>

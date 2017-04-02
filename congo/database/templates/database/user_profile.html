@@ -1,0 +1,32 @@
+{% extends 'database/base.html' %}
+
+{% block content %}
+<form method="post">{% csrf_token %}
+    <table>
+        <tr>
+            <td>Name</td>
+            <td><strong>{{ registered_user.name }}</strong></td>
+        </tr>
+        <tr>
+            <td>Username</td>
+            <td><strong>{{ registered_user.username }}</strong></td>
+        </tr>
+        <tr>
+            <td>Date of Birth</td>
+            <td><strong>{{ registered_user.date_of_birth }}</strong></td>
+        </tr>
+        <tr>
+            <td>Gender</td>
+            <td><strong>{{ registered_user.gender }}</strong></td>
+        </tr>
+        <tr>
+            <td>Phone Number</td>
+            <td><strong>{{ registered_user.phone_number }}</strong></td>
+        </tr>
+        <tr>
+            <td>Annual income</td>
+            <td><strong>{{ registered_user.annual_income }}</strong></td>
+        </tr>
+    </table>
+</form>
+{% endblock content %}

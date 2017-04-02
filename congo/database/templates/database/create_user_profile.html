@@ -1,0 +1,31 @@
+{% extends 'database/base.html' %}
+{% block content %}
+<form method="post">
+    <table>
+        <tr>
+            <td>Your Name</td>
+            <td><strong>{{ user.name }}</strong></td>
+        </tr>
+        <tr>
+            <td>Your username</td>
+            <td><strong>{{ user.username }}</strong></td>
+        </tr>
+        <tr>
+            <td>Your date of birth</td>
+            <td><strong>{{ user.date_of_birth }}</strong></td>
+        </tr>
+        <tr>
+            <td>Your gender</td>
+            <td><strong>{{ user.gender }}</strong></td>
+        </tr>
+        <tr>
+            <td>Your phone number</td>
+            <td><strong>{{ user.phone_number }}</strong></td>
+        </tr>
+        <tr>
+            <td>Your annual income</td>
+            <td><strong>{{ user.annual_income }}</strong></td>
+        </tr>
+    </table>
+</form>
+{% endblock content %}
