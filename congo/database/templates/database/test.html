@@ -1,6 +1,7 @@
 <!doctype html>
 <html class="no-js" lang="en">
   <head>
+    <link href="https://fonts.googleapis.com/css?family=Julius+Sans+One" rel="stylesheet">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Congo</title>
@@ -9,28 +10,29 @@
   <body>
 
     <!-- Start Top Bar -->
-    <div class="top-bar">
-      <div class="top-bar-left">
-        <ul class="menu">
-          <li class="menu-text">Congo</li>      <!-- '/' only for localhost -->
-          <li><a href="http://localhost:8000/create_user/" />Create Account</a></li>
-          <li><a href="http://localhost:8000/create_supplier/"/>Create Supplier Account</a></li>
+    <div class="top-bar" style="background-color:#566377">
+      <div class="top-bar-left" style="background-color:#566377">
+        <ul class="menu" style="background-color:#566377;">
+          <li class="menu-text" style="background-color:#566377; color:white; font-size:30px;font-family:'Julius Sans One', sans-serif;">Congo</li>      <!-- '/' only for localhost -->
+          <li style="background-color:#566377;"><a href="http://localhost:8000/create_user/" style="color:white;"/>Create Account</a></li>
+          <li style="background-color:#566377;"><a href="http://localhost:8000/create_supplier/" style="color:white;"/>Create Supplier Account</a></li>
         </ul>
       </div>
-      <div class="top-bar-right">
-        <ul class="menu">
+      <div class="top-bar-right" style="background-color:#566377;">
+        <ul class="menu" style="background-color:#566377;">
+          <li style="width:24%;"> <input style="width:150%;" type="text" id="search" placeholder="Search our inventory..." required></li>
+          <li style="margin-left:20px;"> <input style="margin-left:115px; height:39px; width:75px;" type="submit" value="Search" id="submit"></li>
           {% if user.is_authenticated == 1%}
-            <li>Welcome {{ user.username }}</li>
-            <form class="form-wrapper">
-              <input type="text" id="search" placeholder="Search for..." required>
-              <input type="submit" value="go" id="submit">
-            </form>
-            <li><a href="http://localhost:8000/logout/"/>Logout</a></li>
+          <li style="color:white; margin-right:20px; padding: 15px;"><b>Welcome, {{ user.username }}</b></li>
+          <li><a href="http://localhost:8000/" style="color:white;"/>Home</a></li>
+          <li><a onclick="validate();" style="color:white;">View Profile</a></li>
+
+            <li><a href="http://localhost:8000/logout/" style="color:white;"/>Logout</a></li>
           {% else %}
             <li><a href="http://localhost:8000/login/"/>Login</a></li>
           {% endif %}
-          <li><a onclick="validate();">View Profile</a></li>
-          <li><a href="http://localhost:8000/"/>Home</a></li>
+
+
         </ul>
       </div>
     </div>
@@ -42,7 +44,6 @@
         <button class="orbit-previous" aria-label="previous"><span class="show-for-sr">Previous Slide</span>&#9664;</button>
         <button class="orbit-next" aria-label="next"><span class="show-for-sr">Next Slide</span>&#9654;</button>
         <li class="orbit-slide is-active">
-          <img src="http://placehold.it/2000x750">
         </li>
         <li class="orbit-slide">
           <img src="http://placehold.it/2000x750">
