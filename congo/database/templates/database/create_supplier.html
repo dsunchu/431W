@@ -1,8 +1,8 @@
 {% extends 'database/base.html' %}
 
 {% block content %}
-<form method="post" class="post-form" >{% csrf_token %}
+<form method="post" class="post-form" style="width:30%; margin:0 auto; padding:45px;" >{% csrf_token %}
     {{form.as_p}}
-    <button>Submit</button>
+    <button style="margin:0 40%; padding: 10px 10px; background-color:#4CAF50; border:none; color:white;">Submit</button>
 </form>
 {% endblock content %}

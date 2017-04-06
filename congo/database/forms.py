@@ -1,11 +1,12 @@
 from django import forms
-
+from django.forms import extras
 from .models import *
 
 
 class registered_user_form(forms.ModelForm):
     username = forms.CharField(max_length=30)
     password = forms.CharField(max_length=30)
+    date_of_birth = forms.DateField(widget=extras.SelectDateWidget(years=range(1900,2017)))
     class Meta:
         model = RegisteredUser
         fields = ['name',
