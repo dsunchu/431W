@@ -17,13 +17,16 @@
           <li class="menu-text" style="background-color:#566377; color:white; font-size:30px;font-family:'Julius Sans One', sans-serif;">Congo</li>      <!-- '/' only for localhost -->
           <li style="background-color:#566377;"><a href="http://localhost:8000/create_user/" style="color:white;"/>Create Account</a></li>
           <li style="background-color:#566377;"><a href="http://localhost:8000/create_supplier/" style="color:white;"/>Create Supplier Account</a></li>
+          {% if user.is_authenticated == 1 %}
+          <li style="width:8%;"><a style="color:white; margin-top:5px; border-style:solid;"href="http://localhost:8000/sell/"/>Register Sale Item</a></li>
+          {% endif %}
         </ul>
       </div>
       <div class="top-bar-right" style="background-color:#566377;">
         <ul class="menu" style="background-color:#566377;">
           <li style="width:24%;"> <input style="width:150%; margin-top:5px" type="text" id="search" placeholder="Search our inventory..." required></li>
           <li style="margin-left:20px;"> <input style="margin-left:115px; margin-top:5px;height:39px; width:75px;" type="submit" value="Search" id="submit"></li>
-          {% if user.is_authenticated == 1%}
+          {% if user.is_authenticated == 1 %}
           <li style="color:white; margin-right:20px; padding: 15px;"><b>Welcome, {{ user.username }}</b></li>
           <li><a href="http://localhost:8000/" style="color:white;"/>Home</a></li>
           <li><a onclick="validate();" style="color:white;">View Profile</a></li>
@@ -47,7 +50,7 @@
         <li class="orbit-slide is-active">
           <img src="https://unfade.io/wp-content/uploads/2017/02/unfade-merry-christmas-2000x687.jpeg">
         </li>
-        <li class=""orbit-slide">
+        <li class="orbit-slide">
 
         </li>
         <li class="orbit-slide">
@@ -73,13 +76,15 @@
         <img class="thumbnail" src="http://placehold.it/300x400">
         <h5>Nulla At Nulla Justo, Eget</h5>
         <p>$400</p>
-        <a href="#" class="button expanded">Buy</a>
+        <!--linked this button to a auction item change this on local copies -->
+        <a href="http://localhost:8000/items/6/" class="button expanded"/>Bid</a>
       </div>
       <div class="column">
         <img class="thumbnail" src="http://placehold.it/300x400">
         <h5>Nulla At Nulla Justo, Eget</h5>
         <p>$400</p>
-        <a href="#" class="button expanded">Buy</a>
+        <!--linked this button to a listed price item change this on local copies -->
+        <a href="http://localhost:8000/items/7/" class="button expanded"/>Buy</a>
       </div>
       <div class="column">
         <img class="thumbnail" src="http://placehold.it/300x400">

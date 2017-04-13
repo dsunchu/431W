@@ -22,5 +22,6 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^logout/$', auth_views.logout, {'next_page':'/'}, name='logout'),
+    #url(r'^items/',include('items.urls',namespace='items')),
     url(r'', include('database.urls',namespace='database')),
 ]

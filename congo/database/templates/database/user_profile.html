@@ -1,6 +1,11 @@
 {% extends 'database/base.html' %}
 
 {% block content %}
+<div>
+    <button><a href="http://localhost:8000/add_credit_card/" />Add Credit Card</a></button>
+    <button><a href="http://localhost:8000/add_address/" />Add Address</a></button>
+    <button><a href="http://localhost:8000/add_email/" />Add Email</a></button>
+</div>
 <form method="post" style="padding:45px;">{% csrf_token %}
     <table style="margin: 0 auto;">
         <tr>
@@ -32,5 +37,34 @@
     </table>
 
 </form>
+{% for i in items %}
+    <table style="margin: 0 auto;">
+        <tr>
+            <td>Name</td>
+            <td><strong>{{ i.item_name }}</strong></td>
+        </tr>
+        <tr>
+            <td>ID</td>
+            <td><strong>{{ i.item_id }}</strong></td>
+        </tr>
+        <tr>
+            <td>Description</td>
+            <td><strong>{{ i.description }}</strong></td>
+        </tr>
+        <tr>
+            <td>place_of_origin</td>
+            <td><strong>{{ i.place_of_origin }}</strong></td>
+        </tr>
+        <tr>
+            <td>url</td>
+            <td><strong>{{ i.url }}</strong></td>
+        </tr>
 
+        <tr>
+            <td>Amount in Stock</td>
+            <td><strong>{{ i.amount_in_stock }}</strong></td>
+        </tr>
+
+    </table>
+{% endfor %}
 {% endblock content %}

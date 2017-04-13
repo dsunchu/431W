@@ -1,18 +1,26 @@
 from django.shortcuts import render
-from django.http import *
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from django.shortcuts import redirect, render_to_response
 from django.contrib.auth import authenticate, login, logout
+from decimal import Decimal
+import multiprocessing
+import datetime
+from .tasks import add
 # Create your views here.
 
+#cookies / cookiemonster admin
+#hungry/hungry registered
+
 '''
-FUNCTIONALITY
+//////////////////////////////////////////////////////////////////////////////////
+USERS BEGIN
 -creating users
 -creating suppliers
 -user login
 -viewing user profile
-
+-supplier login -> not started
+/////////////////////////////////////////////////////////////////////////////////
 '''
 
 '''
@@ -115,4 +123,256 @@ def login_user(request):
 
 def index_page(request):
     return render(request,'database/test.html')
+
+@login_required(login_url='http://localhost:8000/login/')
+def add_credit_card(request):
+    if request.method == "POST":
+        form = credit_card_form(request.POST)
+        if form.is_valid():
+            #find corresponding user, link user to creditcard
+            r = RegisteredUser.objects.get(user__username=request.user.username)
+            if form.save():
+                credit_card = credit_cards.objects.get(card_number=form['card_number'].value())
+                credit_card.user = r
+                credit_card.save()
+                return render(request, 'items/upload_success.html')
+            else:
+                return render(request, 'items/upload_fail.html')
+    else:
+        form = credit_card_form
+    return render(request,'database/add_credit_card.html',{'form':form})
+
+@login_required(login_url='http://localhost:8000/login/')
+def add_address(request):
+    if request.method == "POST":
+        form = address_form(request.POST)
+        if form.is_valid():
+            #find corresponding user, link user to creditcard
+            r = RegisteredUser.objects.get(user__username=request.user.username)
+            if form.save():
+                street = form['street'].value()
+                city = form['city'].value()
+                zip_code = form['zip_code'].value()
+                address = addresses.objects.get(street=street,city=city,zip_code=zip_code)
+                address.user = r
+                address.save()
+                return render(request, 'items/upload_success.html')
+            else:
+                return render(request, 'items/upload_fail.html')
+    else:
+        form = address_form
+        #use same template as add creditcard
+    return render(request,'database/add_address.html',{'form':form})
+
+@login_required(login_url='http://localhost:8000/login/')
+def add_email(request):
+    if request.method == "POST":
+        form = email_form(request.POST)
+        if form.is_valid():
+            #find corresponding user, link user to creditcard
+            r = RegisteredUser.objects.get(user__username=request.user.username)
+            if form.save():
+                email = emails.objects.get(address=form['address'].value(),domain=form['domain'].value())
+                email.user = r
+                email.save()
+                return render(request, 'items/upload_success.html')
+            else:
+                return render(request, 'items/upload_fail.html')
+    else:
+        form = email_form
+        #use same template as add creditcard
+    return render(request,'database/add_address.html',{'form':form})
+
+'''
+////////////////////////////////////////////////////////////////////////////
+ITEMS BEGIN
+-users add auction or listed price items
+-creates item profile pages
+-purchase listed price items
+-bid on auction items
+////////////////////////////////////////////////////////////////////////////
+'''
+@login_required(login_url='http://localhost:8000/login/')
+def item_page(request,item_id):
+    #get item type
+    s = sells.objects.get(item_id = item_id)
+    if request.method=='POST':
+        if s.type == 'L':
+            form = purchase_amount_form(request.POST)
+            if form.is_valid():
+                request.session['amount'] = form['amount'].value()
+                #print(form['amount'].value())
+                url = 'http://localhost:8000/items/' + item_id + '/purchase/'
+                return redirect(url)
+        else:
+            form = place_bid_form(request.POST)
+            if form.is_valid():
+                i = sale_items.objects.get(item_id__item_id=item_id)
+                registered_user = RegisteredUser.objects.get(user__username=request.user.username)
+                request.session['bid_amount'] = form['bid_amount'].value()
+                if i.current_bid is not None:
+                    if i.current_bid < Decimal(form['bid_amount'].value()):
+                        i.current_bid = Decimal(form['bid_amount'].value())
+                        i.save()
+                else:
+                    i.current_bid = form['bid_amount'].value()
+                    i.save()
+
+                if bids.objects.create(bid_amount=form['bid_amount'].value(),item_bid_on=i,bidder=registered_user):
+                    return render(request, 'items/upload_success.html')
+                else:
+                    return render(request, 'items/upload_fail.html')
+    else:
+        if s.type == 'L':
+            form = purchase_amount_form
+        else:
+            form = place_bid_form
+    item_info = sale_items.objects.get(item_id=item_id)
+    #figure out query for seller username later
+    #sell = sells.objects.get(item_id=item_id)
+    #item_info.seller = sell.user
+    return render(request, 'items/item_profile.html',{'item':item_info, 'form':form,'s':s})
+
+'''
+new profile page that presents user sale items as well
+'''
+@login_required(login_url='http://localhost:8000/login/')
+def view_user_sale_items(request,user_name):
+    user = User.objects.get(username=request.user.username)
+    registered_user = RegisteredUser.objects.get(user=user)
+    registered_user.username=request.user.username
+
+    items = sale_items.objects.filter(item_id__user__user__username=user_name)
+    for i in items:
+        print(i.item_name)
+
+    return render(request,'database/user_profile.html',{'items':items, 'registered_user':registered_user})
+
+
+#gets called from sell item, populates fields in sale_item table
+#populates both auction items and listed items based form request.session['type']
+@login_required(login_url='http://localhost:8000/login/')
+def upload_auction_list_item(request):
+    if request.method == "POST":
+        if(request.session['type'] == 'A'):
+            form = upload_auction_item_form(request.POST)
+            if form.is_valid():
+                seller = sells.objects.get(item_id=request.session['item_id'])
+                if form.save():
+                    item = sale_items.objects.get(item_name=form['item_name'].value(), description=form['description'].value())
+                    item.item_id = seller
+                    item.save()
+                    return render(request,'items/upload_success.html')
+                else:
+                    return render(request,'items/upload_fail.html')
+        else:
+            form = upload_list_item_form(request.POST)
+            if form.is_valid():
+                seller = sells.objects.get(item_id=request.session['item_id'])
+                if form.save():
+                    item = sale_items.objects.get(item_name=form['item_name'].value(), description=form['description'].value())
+                    item.item_id = seller
+                    item.save()
+                    print(item.item_id.item_id)
+                    return render(request,'items/upload_success.html')
+                else:
+                    return render(request,'items/upload_fail.html')
+
+    else:
+        if request.session['type'] == 'A':
+            form=upload_auction_item_form()
+        else:
+            form=upload_list_item_form()
+    return render(request,'items/upload_item.html',{'form':form})
+
+
+
+'''
+initial call for users to sell items
+-determines type of item and populates fields accordingly
+'''
+@login_required(login_url='http://localhost:8000/login/')
+def sell_item(request):
+    #if request.user.is_authenticated:
+    #form = sell_item(request.POST)
+
+    if request.method == 'POST':
+        #user = request.user
+        form = sell_item_form(request.POST)
+        if form.is_valid():
+            if form.save():
+                #store some vars for later
+                request.session['username'] = request.user.username
+                request.session['type'] = form['type'].value()
+                user = User.objects.get(username=request.session['username'])
+                registered_user = RegisteredUser.objects.get(user=user)
+                sell_inst = sells.objects.filter(type=request.session['type']).latest('item_id')
+                sell_inst.user = registered_user
+                sell_inst.save()    #remember this...
+                request.session['item_id'] = sell_inst.item_id
+                print(sell_inst.item_id, sell_inst.user.user.username)
+                return redirect('database:upload_auction_list_item')
+            #return render(request,'database/create_user_info.html')
+
+    else:
+        form = sell_item_form
+    return render(request,'items/upload_item.html',{'form':form})
+
+'''
+-purchase page redirected from item_profile page
+-lets user choose credit card to use,ship address, and shipment date
+-bidding stuff not finished yet
+-still  need to update item amounts in items table if a sale occurs
+'''
+@login_required(login_url='http://localhost:8000/login/')
+def purchase(request,item_id):
+    if request.method=='POST':
+        order = orders_form(request.POST,username=request.user.username)
+        if order.is_valid():
+            #order['amount'] = request.session['amount']
+            #if order.save():
+            r = RegisteredUser.objects.get(user__username=request.user.username)
+            i = sale_items.objects.get(item_id__item_id=item_id)
+            o = orders.objects.create(credit_card=order['credit_card'].value(),
+                                      ship_date = order['ship_date'].value(),
+                                      ship_address=order['ship_address'].value())
+            s = sells.objects.get(item_id=item_id)
+            print(o.order_id)
+            #set order info
+            o.user = r
+            o.item = i
+            o.amount = request.session['amount']
+
+            #determine if seller is user or supplier
+            if s.user is not None:
+                user = s.user
+                o.seller = user.user.username
+            else:
+                supplier=s.supplier
+                o.seller=s.supplier.supplier_id
+
+            #use as bid winner page as well
+            if i.listed_price is not None:
+                price = i.listed_price
+                o.item_cost = price
+            else:
+                print("place holder for bids")
+
+            o.save()
+            return render(request, 'items/upload_success.html')
+            #else:
+                #return render(request,'items/upload_fail.html')
+    else:
+        order = orders_form(username=request.user.username)
+
+    return render(request,'items/purchase.html',{'form':order})
+
+
+
+
+
+
+
+
+
 

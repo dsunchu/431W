@@ -9,35 +9,14 @@ https://docs.djangoproject.com/en/1.10/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
-
+#from __future__ import absolute_import, unicode_literals
 import os
-
+import djcelery
+djcelery.setup_loader()
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-'''
-TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATE_PATH],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
-
-
-TEMPLATE_DIRS = (
-    "database/templates/database",
-)
-'''
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "congo.settings")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -49,7 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
 # Application definition
 
 INSTALLED_APPS = [
@@ -60,8 +40,39 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'database',
-    'bootstrap3'
+    'bootstrap3',
+    'djcelery'
 ]
+'''
+Q_CLUSTER = {
+    'name': 'congo',
+    'workers': 8,
+    'timeout': 60,
+    'compress': True,
+    'cpu_affinity': 1,
+    'save_limit': 250,
+    'queue_limit': 500,
+    'label': 'Django Q',
+    'redis': {
+        'host': '127.0.0.1',
+        'port': 6379,
+        'db': 0, }
+
+}
+'''
+from datetime import timedelta
+
+CELERYBEAT_SCHEDULE = {
+    'Check_Auction_items': {
+        'task': 'database.tasks.auction_manager',
+        'schedule': timedelta(seconds=30)
+        #'args': (16, 16)
+    },
+}
+
+CELERY_TIMEZONE = 'UTC'
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -78,7 +89,8 @@ ROOT_URLCONF = 'congo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['database/templates/database'],
+        'DIRS': ['database/templates/database',
+                 'database/templates/items'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -144,3 +156,24 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = 'database:index_page'
+MEDIA_ROOT = '/home/david/django_image_files/'
+MEDIA_URL = '/django_image_files/'
+
+# Celery settings
+BROKER_URL = "localhost"
+BROKER_PORT = 5672
+BROKER_USER="guest"
+BROKER_PASSWORD="guest"
+BROKER_VHOST="/"
+
+'''
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+CELERY_IMPORTS = ("database.tasks",)
+
+'''

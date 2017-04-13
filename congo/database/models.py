@@ -13,26 +13,27 @@ class sells(models.Model):
         (LISTED_PRICE, 'listed_price_items')
     )
     type = models.CharField(max_length=10, choices=SALE_ITEM_CHOICES)
-    # supplier = models.ForeignKey(supplier,on_delete=models.CASCADE,null=True)
-    # user = models.ForeignKey(registered_user,on_delete=models.CASCADE,null=True)
+    supplier = models.ForeignKey('supplier',on_delete=models.CASCADE,null=True,related_name='sell_supplier')
+    user = models.ForeignKey('RegisteredUser',on_delete=models.CASCADE,null=True,related_name='sell_user')
     item_id = models.AutoField(primary_key=True)
 
 
 class sale_items(models.Model):
-    item_id = models.OneToOneField(sells, on_delete=models.CASCADE)
+    item_id = models.OneToOneField(sells, on_delete=models.CASCADE,null=True)
     item_name = models.CharField(max_length=50)
     description = models.CharField(max_length=500)
     url = models.CharField(max_length=100)
     place_of_origin = models.CharField(max_length=50)
     amount_in_stock = models.IntegerField()
     initial_sale_date = models.DateField()
-    average_rating = models.DecimalField(max_digits=5, decimal_places=4)
+    average_rating = models.DecimalField(max_digits=5, decimal_places=4,null=True)
 
     # auction items
     reserve_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     auction_end_date = models.DateField(null=True)
-    auction_end_time = models.DateTimeField(null=True)
+    auction_end_time = models.TimeField(null=True)
     valid_auction = models.IntegerField(default=0, null=True)
+    current_bid = models.DecimalField(max_digits=8,decimal_places=2,null=True)
 
     # listed items
     listed_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
@@ -49,18 +50,21 @@ class user_list(models.Model):
 class emails(models.Model):
     address = models.CharField(max_length=30, primary_key=True)
     domain = models.CharField(max_length=30)
+    user = models.ForeignKey('RegisteredUser',on_delete=models.CASCADE,null=True)
 
 
 class addresses(models.Model):
     street = models.CharField(max_length=50, primary_key=True)
     city = models.CharField(max_length=50)
     zip_code = models.IntegerField()
+    user = models.ForeignKey('RegisteredUser',on_delete=models.CASCADE,null=True)
 
 
 class credit_cards(models.Model):
     card_number = models.IntegerField(primary_key=True)
     expiration_date = models.DateField()
     security_code = models.IntegerField()
+    user = models.ForeignKey('RegisteredUser', on_delete=models.CASCADE, null=True)
 
 GENDER = (
     ('male', 'Male'),
@@ -69,7 +73,7 @@ GENDER = (
 )
 class RegisteredUser(models.Model):
     # User model already contains username and password
-    user = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True,related_name='user_inst')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True,related_name='user_inst')
     #registered_user_id = models.AutoField(primary_key=True, default='0')
     name = models.CharField(max_length=50)
     date_of_birth = models.DateField(null=True)
@@ -77,10 +81,10 @@ class RegisteredUser(models.Model):
     phone_number = models.IntegerField(blank=True, null=True)
     annual_income = models.IntegerField(blank=True, null=True)
     average_rating = models.DecimalField(max_digits=5, decimal_places=4, null=True)
-    emails = models.ForeignKey(emails, default=0, null=True)
-    addresses = models.ForeignKey(addresses, default=0, null=True)
-    credit_cards = models.ForeignKey(credit_cards, default=0, null=True)
-    sells = models.ForeignKey(sells, default=0, null=True)
+    #emails = models.ForeignKey(emails, default=0, null=True)
+    #addresses = models.ForeignKey(addresses, default=0, null=True)
+    #credit_cards = models.ForeignKey(credit_cards, default=0, null=True)
+    #sells = models.ForeignKey(sells, default=0, null=True)
     list = models.ForeignKey(user_list, default=0, null=True)
     def __str__(self):
         return self.name
@@ -93,7 +97,7 @@ class supplier(models.Model):
     category = models.CharField(max_length=30, null=True)
     revenue = models.DecimalField(max_digits=15, decimal_places=2, null=True)
     average_rating = models.DecimalField(max_digits=5, decimal_places=4, null=True)
-    sells = models.ForeignKey(sells, default=0, null=True)
+    #sells = models.ForeignKey(sells, default=0, null=True)
     def __str__(self):
         return self.supplier_id
 
@@ -144,26 +148,26 @@ class orders(models.Model):
         (PROCESSING, 'item_order_processing'),
         (CANCELED, 'item_order_canceled')
     )
-    item = models.ForeignKey(sale_items, on_delete=models.CASCADE)
-    user = models.ForeignKey(RegisteredUser, on_delete=models.CASCADE)
-    order_date = models.DateField()
+    item = models.ForeignKey(sale_items, on_delete=models.CASCADE,null=True)
+    user = models.ForeignKey(RegisteredUser, on_delete=models.CASCADE,null=True)
+    order_date = models.DateField(auto_now_add=True)
     order_id = models.AutoField(primary_key=True)
-    seller = models.CharField(max_length=30)
-    order_time = models.DateTimeField()
-    amount = models.IntegerField()
-    item_cost = models.DecimalField(max_digits=8, decimal_places=2)
-    ship_date = models.DateField()
-    credit_card = models.ForeignKey(credit_cards, on_delete=models.DO_NOTHING)
-    ship_address = models.ForeignKey(addresses, on_delete=models.DO_NOTHING)
+    seller = models.CharField(max_length=30,null=True)
+    order_time = models.TimeField(auto_now_add=True)
+    amount = models.IntegerField(null=True)
+    item_cost = models.DecimalField(max_digits=8, decimal_places=2,null=True)
+    ship_date = models.DateField(null=True)
+    credit_card = models.CharField(max_length=30,null=True)
+    ship_address = models.CharField(max_length=50, null=True)
     confirmed_purchase = models.BooleanField(default=False)
-    shipment_status = models.CharField(max_length=10, choices=SALE_ITEM_CHOICES)
-    tracking_number = models.IntegerField()
+    shipment_status = models.CharField(max_length=10, choices=SALE_ITEM_CHOICES,null=True)
+    tracking_number = models.IntegerField(null=True)
 
 
 class bids(models.Model):
     bid_id = models.AutoField(primary_key=True)
     bid_amount = models.DecimalField(max_digits=8, decimal_places=2)
-    date_placed = models.DateField()
-    time_placed = models.DateTimeField()
-    item_bid_on = models.OneToOneField(sale_items, on_delete=models.CASCADE)
-    bidder = models.OneToOneField(RegisteredUser, on_delete=models.CASCADE)
+    date_placed = models.DateField(auto_now_add=True)
+    time_placed = models.TimeField(auto_now_add=True)
+    item_bid_on = models.ForeignKey(sale_items, on_delete=models.CASCADE)
+    bidder = models.ForeignKey(RegisteredUser, on_delete=models.CASCADE)
