@@ -122,7 +122,12 @@ def login_user(request):
 
 
 def index_page(request):
-    return render(request,'database/test.html')
+    if request.user.is_authenticated() == 1:
+        print("logged in user ",request.user.username)
+        r = RegisteredUser.objects.get(user__username=request.user.username)
+        return render(request,'database/test.html',{'registered_user':r})
+    else:
+        return render(request, 'database/test.html')
 
 @login_required(login_url='http://localhost:8000/login/')
 def add_credit_card(request):
@@ -196,7 +201,15 @@ ITEMS BEGIN
 def item_page(request,item_id):
     #get item type
     s = sells.objects.get(item_id = item_id)
+    i = sale_items.objects.get(item_id__item_id=item_id)
+    item_reviews = []
+    sum = 0
+    item_info = sale_items.objects.get(item_id=item_id)
+    if reviews.objects.filter(item__item_id__item_id=item_id):
+        item_reviews = reviews.objects.filter(item__item_id__item_id=item_id)
+
     if request.method=='POST':
+        review = reviews_form(request.POST)
         if s.type == 'L':
             form = purchase_amount_form(request.POST)
             if form.is_valid():
@@ -204,10 +217,10 @@ def item_page(request,item_id):
                 #print(form['amount'].value())
                 url = 'http://localhost:8000/items/' + item_id + '/purchase/'
                 return redirect(url)
+
         else:
             form = place_bid_form(request.POST)
             if form.is_valid():
-                i = sale_items.objects.get(item_id__item_id=item_id)
                 registered_user = RegisteredUser.objects.get(user__username=request.user.username)
                 request.session['bid_amount'] = form['bid_amount'].value()
                 if i.current_bid is not None:
@@ -222,31 +235,65 @@ def item_page(request,item_id):
                     return render(request, 'items/upload_success.html')
                 else:
                     return render(request, 'items/upload_fail.html')
+
+        if review.is_valid():
+            print("creating review for item ",s.item_id)
+            user = RegisteredUser.objects.get(user__username=request.user.username)
+            r = reviews.objects.create(stars = review['stars'].value(),
+                                   description = review['description'].value(),
+                                   item=i,
+                                   rater=user)
+            if orders.objects.filter(item=i, user=user) is not None:
+                r.verified_purchase = True
+            r.save()
+            #need to refresh page for avg rating to propogate
+            for w in item_reviews:
+                sum += w.stars
+            print(sum)
+            sum = sum / item_reviews.count()
+            i.average_rating = sum
+            i.save()
+
     else:
         if s.type == 'L':
             form = purchase_amount_form
         else:
             form = place_bid_form
-    item_info = sale_items.objects.get(item_id=item_id)
-    #figure out query for seller username later
-    #sell = sells.objects.get(item_id=item_id)
-    #item_info.seller = sell.user
-    return render(request, 'items/item_profile.html',{'item':item_info, 'form':form,'s':s})
+        review = reviews_form
+    return render(request, 'items/item_profile.html',{'item':item_info, 'form':form,'s':s, 'review':review,'item_reviews':item_reviews})
 
 '''
 new profile page that presents user sale items as well
 '''
 @login_required(login_url='http://localhost:8000/login/')
 def view_user_sale_items(request,user_name):
-    user = User.objects.get(username=request.user.username)
-    registered_user = RegisteredUser.objects.get(user=user)
-    registered_user.username=request.user.username
+    u = User.objects.get(username=user_name)
+    registered_user = RegisteredUser.objects.get(user=u)
+    registered_user.username = user_name
+    user_reviews = reviews.objects.filter(ratee=registered_user)
+    sum = 0
 
     items = sale_items.objects.filter(item_id__user__user__username=user_name)
-    for i in items:
-        print(i.item_name)
-
-    return render(request,'database/user_profile.html',{'items':items, 'registered_user':registered_user})
+    if request.method=='POST':
+        review = reviews_form(request.POST)
+        if review.is_valid():
+            print("creating review for user ", registered_user.user.username)
+            user = RegisteredUser.objects.get(user__username=request.user.username)
+            r = reviews.objects.create(stars=review['stars'].value(),
+                                        description=review['description'].value(),
+                                        rater=user)
+            r.ratee.add(registered_user)
+            r.save()
+            # calculate user avg rating
+            for i in user_reviews:
+                sum += i.stars
+            print(sum)
+            sum = sum / user_reviews.count()
+            registered_user.average_rating = sum
+            registered_user.save()
+    else:
+        review = reviews_form
+    return render(request,'database/user_profile.html',{'items':items, 'registered_user':registered_user,'review':review,'reviews':user_reviews})
 
 
 #gets called from sell item, populates fields in sale_item table
@@ -345,18 +392,15 @@ def purchase(request,item_id):
 
             #determine if seller is user or supplier
             if s.user is not None:
-                user = s.user
-                o.seller = user.user.username
+                o.seller = s.user.user.username
             else:
-                supplier=s.supplier
                 o.seller=s.supplier.supplier_id
 
             #use as bid winner page as well
             if i.listed_price is not None:
-                price = i.listed_price
-                o.item_cost = price
+                o.item_cost = i.listed_price
             else:
-                print("place holder for bids")
+                o.item_cost = i.current_bid
 
             o.save()
             return render(request, 'items/upload_success.html')
@@ -366,8 +410,6 @@ def purchase(request,item_id):
         order = orders_form(username=request.user.username)
 
     return render(request,'items/purchase.html',{'form':order})
-
-
 
 
 

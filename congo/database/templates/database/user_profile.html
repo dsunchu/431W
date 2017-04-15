@@ -33,6 +33,10 @@
             <td>Annual income</td>
             <td><strong>${{ registered_user.annual_income }}</strong></td>
         </tr>
+        <tr>
+            <td>Average Rating</td>
+            <td><strong>{{ registered_user.average_rating }}</strong></td>
+        </tr>
 
     </table>
 
@@ -67,4 +71,28 @@
 
     </table>
 {% endfor %}
+
+<form method="POST" action="http://localhost:8000/u/{{registered_user.user.username}}/">{% csrf_token %}
+    {{review}}
+    <input type="submit" value="Add Review">
+</form>
+
+{% for i in reviews %}
+    <table>
+        <tr>
+            <td>Rater</td>
+            <td><strong>{{ i.rater.user.username }}</strong></td>
+        </tr>
+        <tr>
+            <td>Stars</td>
+            <td><strong>{{ i.stars }}</strong></td>
+        </tr>
+        <tr>
+            <td>Description</td>
+            <td><strong>{{ i.description }}</strong></td>
+        </tr>
+    </table>
+{% endfor %}
+
+
 {% endblock content %}

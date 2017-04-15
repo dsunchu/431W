@@ -128,3 +128,9 @@ class orders_form(forms.Form):
 class place_bid_form(forms.Form):
     bid_amount = forms.DecimalField(max_digits=8,decimal_places=2)
 
+class reviews_form(forms.Form):
+    stars = forms.DecimalField(max_digits=5,decimal_places=4)
+    description = forms.CharField(max_length=500)
+
+
+

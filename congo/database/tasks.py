@@ -16,22 +16,34 @@ def auction_manager():
     auction_items = sale_items.objects.filter(item_id__type='A')
     for i in auction_items:
         print(i.item_name)
+        #guard for comparison
         if i.auction_end_date is not None and i.auction_end_time is not None:
-            if i.auction_end_time < datetime.datetime.now().time() and i.auction_end_date <= datetime.datetime.now().date():
-                print("Auction ended ",i.item_id.item_id)
-                bid = bids.objects.filter(item_bid_on=i).latest('time_placed' and 'date_placed')
-                user_email = emails.objects.get(user=bid.bidder)
-                if user_email is not None:
-                    print("Sent Email to Winner")
-                    email_url = user_email.address + '@' + user_email.domain
-                    send_mail('You have won an Auction!',
-                              'Please log in to confirm order details',
-                              'davidsunchu@gmail.com',
-                              [email_url],
-                              fail_silently=False)
-                #remove object from sale_items??
-                #orders.objects.create(item=i,user=bid.bidder)
-                #create object for now, prompt user to populate fields when login
+            print(i.auction_end_date, i.auction_end_time, datetime.datetime.now().time(), datetime.date.today())
+            if i.auction_end_date <= datetime.date.today():
+                if i.auction_end_time < datetime.datetime.now().time() or i.auction_end_date < datetime.date.today():
+                    print("Auction ended ",i.item_id.item_id)
+                    bid = bids.objects.filter(item_bid_on=i).latest('time_placed')
+                    user_email = emails.objects.get(user=bid.bidder)
+                    if i.reserve_price < i.current_bid:
+                        #set auction winner to notify at home
+                        #get user set auction winner
+                        user = bid.bidder
+                        user.auction_winner.add(i)
+                        user.set_auction_flag()
+                        user.save()
+                        print("winner ", user.user.username)
+                        if user_email is not None:
+                            print("Sent Email to Winner")
+                            email_url = user_email.address + '@' + user_email.domain
+                            send_mail('You have won an Auction!',
+                                      'Please log in to confirm order details',
+                                      'davidsunchu@gmail.com',
+                                      [email_url],
+                                      fail_silently=False)
+            #else:
+                #remove from items
+                #sale_items.objects.get(item_id=i.item_id).delete()
+
 
 @shared_task
 def generate_weekly_sale_reports():

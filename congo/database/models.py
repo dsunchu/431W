@@ -30,6 +30,8 @@ class sale_items(models.Model):
 
     # auction items
     reserve_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    #auction_start_date = models.DateField(null=True)
+    #auction_start_time = models.TimeField(null=True)
     auction_end_date = models.DateField(null=True)
     auction_end_time = models.TimeField(null=True)
     valid_auction = models.IntegerField(default=0, null=True)
@@ -86,6 +88,14 @@ class RegisteredUser(models.Model):
     #credit_cards = models.ForeignKey(credit_cards, default=0, null=True)
     #sells = models.ForeignKey(sells, default=0, null=True)
     list = models.ForeignKey(user_list, default=0, null=True)
+    #when the user logs in allow them to set info for auction items
+    auction_winner = models.ManyToManyField(sale_items,null=True)
+    auction_flag = models.BooleanField(default=False)
+    def set_auction_flag(self):
+        if self.auction_winner.all() is not None:
+            self.auction_flag = True
+
+
     def __str__(self):
         return self.name
 
@@ -171,3 +181,13 @@ class bids(models.Model):
     time_placed = models.TimeField(auto_now_add=True)
     item_bid_on = models.ForeignKey(sale_items, on_delete=models.CASCADE)
     bidder = models.ForeignKey(RegisteredUser, on_delete=models.CASCADE)
+
+class reviews(models.Model):
+    item = models.ForeignKey(sale_items,null=True)
+    rater = models.ForeignKey(RegisteredUser,null=True,related_name='rater')
+    ratee = models.ManyToManyField(RegisteredUser,null=True,related_name='user_rating')
+    supplier = models.ManyToManyField(supplier,null=True)
+    description = models.CharField(max_length=500)
+    stars = models.DecimalField(max_digits=5,decimal_places=4,null=True)
+    verified_purchase = models.BooleanField(default=False)
+    #date and time fields

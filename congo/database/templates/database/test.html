@@ -37,6 +37,11 @@
           {% endif %}
 
 
+          {% if registered_user.auction_flag %}
+            {% for i in registered_user.auction_winner.all %}
+              <li style="width:8%;"><a style="color:white; margin-top:5px; border-style:solid;"href="http://localhost:8000/items/{{i.item_id.item_id}}/purchase/"/>Winner for Item {{i.item_id.item_id}}!</a></li>
+            {% endfor %}
+          {% endif %}
         </ul>
       </div>
     </div>
@@ -77,7 +82,7 @@
         <h5>Nulla At Nulla Justo, Eget</h5>
         <p>$400</p>
         <!--linked this button to a auction item change this on local copies -->
-        <a href="http://localhost:8000/items/6/" class="button expanded"/>Bid</a>
+        <a href="http://localhost:8000/items/8/" class="button expanded"/>Bid</a>
       </div>
       <div class="column">
         <img class="thumbnail" src="http://placehold.it/300x400">
