@@ -42,11 +42,11 @@ class sale_items(models.Model):
 
 
 class user_list(models.Model):
-    date = models.DateField()
-    number_of_purchases = models.IntegerField()
+    date = models.DateField(auto_now_add=True)
+    number_of_purchases = models.IntegerField(null=True)
     list_name = models.CharField(max_length=30)
-    # user = models.ManyToManyField(registered_user,on_delete=models.CASCADE)
-    item = models.ManyToManyField(sale_items)
+    user = models.ForeignKey('RegisteredUser',null=True)
+    item = models.ManyToManyField(sale_items,null=True)
 
 
 class emails(models.Model):
@@ -87,7 +87,7 @@ class RegisteredUser(models.Model):
     #addresses = models.ForeignKey(addresses, default=0, null=True)
     #credit_cards = models.ForeignKey(credit_cards, default=0, null=True)
     #sells = models.ForeignKey(sells, default=0, null=True)
-    list = models.ForeignKey(user_list, default=0, null=True)
+    #list = models.ForeignKey(user_list, default=0, null=True)
     #when the user logs in allow them to set info for auction items
     auction_winner = models.ManyToManyField(sale_items,null=True)
     auction_flag = models.BooleanField(default=False)

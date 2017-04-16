@@ -1,0 +1,40 @@
+{% extends "database/base.html" %}
+<!---- purchase page after user clicks purchase --->
+{% block content%}
+<form method="POST">{% csrf_token %}
+    {{lists}}
+    <input type="submit" value="View List">
+</form>
+
+{% for i in list_contents.item.all %}
+    <table style="margin: 0 auto;">
+        <tr>
+            <td>Name</td>
+            <td><strong>{{ i.item_name }}</strong></td>
+        </tr>
+        <tr>
+            <td>ID</td>
+            <td><strong>{{ i.item_id }}</strong></td>
+        </tr>
+        <tr>
+            <td>Description</td>
+            <td><strong>{{ i.description }}</strong></td>
+        </tr>
+        <tr>
+            <td>place_of_origin</td>
+            <td><strong>{{ i.place_of_origin }}</strong></td>
+        </tr>
+        <tr>
+            <td>url</td>
+            <td><strong>{{ i.url }}</strong></td>
+        </tr>
+
+        <tr>
+            <td>Amount in Stock</td>
+            <td><strong>{{ i.amount_in_stock }}</strong></td>
+        </tr>
+
+    </table>
+{% endfor %}
+
+{% endblock content %}

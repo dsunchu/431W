@@ -5,6 +5,8 @@
     <button><a href="http://localhost:8000/add_credit_card/" />Add Credit Card</a></button>
     <button><a href="http://localhost:8000/add_address/" />Add Address</a></button>
     <button><a href="http://localhost:8000/add_email/" />Add Email</a></button>
+    <button><a href="http://localhost:8000/u/{{registered_user.user.username}}/create_user_list/" />Add List</a></button>
+    <button><a href="http://localhost:8000/u/{{registered_user.user.username}}/view_list/" />View Lists</a></button>
 </div>
 <form method="post" style="padding:45px;">{% csrf_token %}
     <table style="margin: 0 auto;">

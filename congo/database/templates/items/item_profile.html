@@ -1,0 +1,107 @@
+{% extends "database/base.html" %}
+<!----displays item info, purchase button/bid item -->
+{% block content%}
+
+
+<table>
+    <tr>
+        <td>Name</td>
+        <td><strong>{{ item.item_name }}</strong></td>
+    </tr>
+    <tr>
+        <td>description</td>
+        <td><strong>{{ item.description }}</strong></td>
+    </tr>
+    <tr>
+        <td>url</td>
+        <td><strong>{{ item.url }}</strong></td>
+    </tr>
+    <tr>
+        <td>place_of_origin</td>
+        <td><strong>{{ item.place_of_origin }}</strong></td>
+    </tr>
+    <tr>
+        <td>amount_in_stock</td>
+        <td><strong>{{ item.amount_in_stock }}</strong></td>
+    </tr>
+    <tr>
+        <td>initial_sale_date</td>
+        <td><strong>{{ item.initial_sale_date }}</strong></td>
+    </tr>
+    <tr>
+        <td>Seller</td>
+        <td><strong>{{ item.item_id.user.user.username }}</strong></td>
+    </tr>
+    <tr>
+        <td>ID</td>
+        <td><strong>{{ item.item_id.item_id }}</strong></td>
+    </tr>
+    <tr>
+        <td>Average Rating</td>
+        <td><strong>{{ item.average_rating }}</strong></td>
+    </tr>
+    {% if s.type == 'L' %}
+    <tr>
+        <td>Price</td>
+        <td><strong>{{ item.listed_price }}</strong></td>
+    </tr>
+    {% else %}
+    <tr>
+        <td>Current Bid</td>
+        <td><strong>{{ item.current_bid }}</strong></td>
+    </tr>
+    {% endif %}
+</table>
+{% if s.type == 'L'%}
+<form method="POST">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" value="Add to Cart" onclick="item_order_page();">
+</form>
+{% else %}
+<form method="POST">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" value="Place Bid">
+</form>
+{% endif %}
+<form method="POST" action="http://localhost:8000/items/{{s.item_id}}/">{% csrf_token %}
+    {{list}}
+    <input type="submit" value="Add to List">
+</form>
+
+<form method="POST" action="http://localhost:8000/items/{{s.item_id}}/">{% csrf_token %}
+    {{review}}
+    <input type="submit" value="Add Review">
+</form>
+
+{% for i in item_reviews %}
+    <table>
+        <tr>
+            <td>Rater</td>
+            <td><strong>{{ i.rater.user.username }}</strong></td>
+        </tr>
+        <tr>
+            <td>Stars</td>
+            <td><strong>{{ i.stars }}</strong></td>
+        </tr>
+        <tr>
+            <td>Description</td>
+            <td><strong>{{ i.description }}</strong></td>
+        </tr>
+        <tr>
+            <td>Verified Purchase</td>
+            <td><strong>{{ i.verified_purchase }}</strong></td>
+        </tr>
+    </table>
+{% endfor %}
+
+<script type="text/javascript">
+    function item_order_page(){
+      var item_id = "{{item.item_id.item_id}}";
+      window.location.href="http://localhost:8000/items/"+item_id+"/purchase/";
+      }
+  </script>
+
+
+{% endblock content %}

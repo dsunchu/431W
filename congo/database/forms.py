@@ -132,5 +132,25 @@ class reviews_form(forms.Form):
     stars = forms.DecimalField(max_digits=5,decimal_places=4)
     description = forms.CharField(max_length=500)
 
+class add_item_list_form(forms.Form):
+    class Meta:
+        model = user_list
+        fields = ['list_name']
+    def __init__(self,*args,**kwargs):
+        #_choices_list = kwargs.pop('_choices',None)
+        username = kwargs.pop('username')
+        super(add_item_list_form,self).__init__(*args,**kwargs)
+        if username is not None:
+           #self.fields['username'] = username
+           self.fields['list_name'] = forms.ChoiceField(label="Lists",
+                                                   choices=[(x.list_name, x.list_name) for x in
+                                                            user_list.objects.filter(user__user__username=username)])
+
+
+class add_list_form(forms.Form):
+    list_name = forms.CharField(max_length=30)
+    class Meta:
+        model = user_list
+        fields = ['list_name']
 
 

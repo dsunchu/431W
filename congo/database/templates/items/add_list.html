@@ -1,0 +1,9 @@
+{% extends "database/base.html" %}
+<!---- purchase page after user clicks purchase --->
+{% block content%}
+<form method="post" class="post-form">{% csrf_token %}
+    {{form.as_p}}
+    <button>Add List</button>
+</form>
+
+{% endblock content %}

@@ -1,0 +1,13 @@
+{% extends "database/base.html" %}
+<!---- purchase page after user clicks purchase --->
+{% block content%}
+<div>
+    <button><a href="http://localhost:8000/add_credit_card/" />Add Credit Card</a></button>
+    <button><a href="http://localhost:8000/add_address/" />Add Address</a></button>
+</div>
+<form method="post" class="post-form" >{% csrf_token %}
+    {{form}}
+    <button>Purchase</button>
+</form>
+
+{% endblock content %}

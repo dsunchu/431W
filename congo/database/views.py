@@ -205,11 +205,13 @@ def item_page(request,item_id):
     item_reviews = []
     sum = 0
     item_info = sale_items.objects.get(item_id=item_id)
+    registered_user = RegisteredUser.objects.get(user__username=request.user.username)
     if reviews.objects.filter(item__item_id__item_id=item_id):
         item_reviews = reviews.objects.filter(item__item_id__item_id=item_id)
 
     if request.method=='POST':
         review = reviews_form(request.POST)
+        list = add_item_list_form(request.POST,username=request.user.username)
         if s.type == 'L':
             form = purchase_amount_form(request.POST)
             if form.is_valid():
@@ -221,7 +223,6 @@ def item_page(request,item_id):
         else:
             form = place_bid_form(request.POST)
             if form.is_valid():
-                registered_user = RegisteredUser.objects.get(user__username=request.user.username)
                 request.session['bid_amount'] = form['bid_amount'].value()
                 if i.current_bid is not None:
                     if i.current_bid < Decimal(form['bid_amount'].value()):
@@ -238,21 +239,25 @@ def item_page(request,item_id):
 
         if review.is_valid():
             print("creating review for item ",s.item_id)
-            user = RegisteredUser.objects.get(user__username=request.user.username)
             r = reviews.objects.create(stars = review['stars'].value(),
                                    description = review['description'].value(),
                                    item=i,
-                                   rater=user)
-            if orders.objects.filter(item=i, user=user) is not None:
+                                   rater=registered_user)
+            if orders.objects.filter(item=i, user=registered_user) is not None:
                 r.verified_purchase = True
             r.save()
             #need to refresh page for avg rating to propogate
             for w in item_reviews:
                 sum += w.stars
-            print(sum)
             sum = sum / item_reviews.count()
             i.average_rating = sum
             i.save()
+
+        if list.is_valid():
+            add_to_list = user_list.objects.get(user = registered_user,list_name=list['list_name'].value())
+            print("added item to list: ",add_to_list.list_name,i.item_id.item_id)
+            add_to_list.item.add(i)
+            add_to_list.save()
 
     else:
         if s.type == 'L':
@@ -260,7 +265,9 @@ def item_page(request,item_id):
         else:
             form = place_bid_form
         review = reviews_form
-    return render(request, 'items/item_profile.html',{'item':item_info, 'form':form,'s':s, 'review':review,'item_reviews':item_reviews})
+        list = add_item_list_form(username=request.user.username)
+    return render(request, 'items/item_profile.html',{'item':item_info, 'form':form,
+                                                      's':s, 'review':review,'item_reviews':item_reviews,'list':list})
 
 '''
 new profile page that presents user sale items as well
@@ -410,6 +417,36 @@ def purchase(request,item_id):
         order = orders_form(username=request.user.username)
 
     return render(request,'items/purchase.html',{'form':order})
+
+
+@login_required(login_url='http://localhost:8000/login/')
+def view_user_list(request,user_name):
+    u = RegisteredUser.objects.get(user__username=request.user.username)
+    list_contents = []
+    if request.method == "POST":
+        lists = add_item_list_form(request.POST,username=request.user.username)
+        if lists.is_valid():
+            list_contents = user_list.objects.get(user = u, list_name=lists['list_name'].value())
+            return render(request,'items/view_list.html',{'lists':lists, 'list_contents':list_contents})
+    else:
+        lists = add_item_list_form(username=request.user.username)
+
+    return render(request,'items/view_list.html',{'lists':lists,'list_contents':list_contents})
+
+
+@login_required(login_url='http://localhost:8000/login/')
+def create_user_list(request,user_name):
+    u = RegisteredUser.objects.get(user__username=request.user.username)
+
+    if request.method == "POST":
+        form = add_list_form(request.POST)
+        if form.is_valid():
+            list = user_list.objects.create(list_name=form['list_name'].value(), user = u)
+            list.save()
+            return render(request, 'items/upload_success.html')
+    else:
+        form = add_list_form
+    return render(request, 'items/add_list.html',{'form':form})
 
 
 
