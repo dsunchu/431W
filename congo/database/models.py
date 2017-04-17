@@ -9,13 +9,15 @@ class sells(models.Model):
     AUCTION = 'A'
     LISTED_PRICE = 'L'
     SALE_ITEM_CHOICES = (
-        (AUCTION, 'auction_items'),
-        (LISTED_PRICE, 'listed_price_items')
+        (AUCTION, 'Auction'),
+        (LISTED_PRICE, 'List Price')
     )
     type = models.CharField(max_length=10, choices=SALE_ITEM_CHOICES)
     supplier = models.ForeignKey('supplier',on_delete=models.CASCADE,null=True,related_name='sell_supplier')
     user = models.ForeignKey('RegisteredUser',on_delete=models.CASCADE,null=True,related_name='sell_user')
     item_id = models.AutoField(primary_key=True)
+    def __str__(self):
+        return str(self.item_id)
 
 
 class sale_items(models.Model):
@@ -27,6 +29,8 @@ class sale_items(models.Model):
     amount_in_stock = models.IntegerField()
     initial_sale_date = models.DateField()
     average_rating = models.DecimalField(max_digits=5, decimal_places=4,null=True)
+    def __str__(self):
+        return self.item_name
 
     # auction items
     reserve_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)

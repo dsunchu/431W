@@ -1,0 +1,23 @@
+{% extends 'database/base.html' %}
+{% block content %}
+
+<!--<h3 style="padding:20px">Search Results</h3>
+{% for x in filtered_results %}
+<div style="padding:20px">
+    <p>{{x.item_name}} - {{x.description}}</p>
+</div>
+{% endfor %}-->
+
+<h3 style="padding:20px">Search Results</h3>
+
+{% for x in query_results %}
+<div style="padding:20px; margin-left:10%;">
+    <div>
+        <img src="http://placehold.it/125x174">
+        <strong>{{x.item_name}} - </strong>{{x.description}}
+
+    </div>
+</div>
+{% endfor %}
+
+{% endblock content %}

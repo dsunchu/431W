@@ -1,15 +1,24 @@
 {% extends 'database/base.html' %}
 
 {% block content %}
-<div>
-    <button><a href="http://localhost:8000/add_credit_card/" />Add Credit Card</a></button>
-    <button><a href="http://localhost:8000/add_address/" />Add Address</a></button>
-    <button><a href="http://localhost:8000/add_email/" />Add Email</a></button>
-    <button><a href="http://localhost:8000/u/{{registered_user.user.username}}/create_user_list/" />Add List</a></button>
-    <button><a href="http://localhost:8000/u/{{registered_user.user.username}}/view_list/" />View Lists</a></button>
-</div>
+{% if user.username == registered_user.username %}
+<p>&nbsp</p>
+<ul style="width:100%; margin:0 auto; list-style-type:none; padding: 0; overflow:hidden">
+    <li style="float:left; padding:10px"><a href="http://localhost:8000/add_credit_card/" />Add Credit Card</a></li>
+    <li style="float:left; padding:10px"><a href="http://localhost:8000/add_address/" />Add Address</a></li>
+    <li style="float:left; padding:10px"> <a href="http://localhost:8000/add_email/" />Add Email</a></li>
+    <li style="float:left; padding:10px"><a href="http://localhost:8000/u/{{registered_user.user.username}}/create_user_list/" />Add List</a></li>
+    <li style="float:left; padding:10px"><a href="http://localhost:8000/u/{{registered_user.user.username}}/view_list/" />View Lists</a></li>
+
+</ul>
+
+{% endif %}
+
+<p>&nbsp</p>
+<h3 style="text-align:center;">Overview</h3>
+<hr>
 <form method="post" style="padding:45px;">{% csrf_token %}
-    <table style="margin: 0 auto;">
+    <table style="margin:0 auto; width:50%">
         <tr>
             <td>Name</td>
             <td><strong>{{ registered_user.name }}</strong></td>
@@ -41,9 +50,14 @@
         </tr>
 
     </table>
-
+    <p>&nbsp</p>
+    <h3 style="text-align:center">Items for Sale</h3>
+    <hr>
 </form>
+
+
 {% for i in items %}
+<p>&nbsp</p>
     <table style="margin: 0 auto;">
         <tr>
             <td>Name</td>
@@ -58,7 +72,7 @@
             <td><strong>{{ i.description }}</strong></td>
         </tr>
         <tr>
-            <td>place_of_origin</td>
+            <td>Ships from</td>
             <td><strong>{{ i.place_of_origin }}</strong></td>
         </tr>
         <tr>
@@ -74,13 +88,24 @@
     </table>
 {% endfor %}
 
-<form method="POST" action="http://localhost:8000/u/{{registered_user.user.username}}/">{% csrf_token %}
+
+<p>&nbsp</p>
+<h3 style="text-align:center;">Reviews</h3>
+<hr>
+<p>&nbsp</p>
+
+{% if user.username == registered_user.username %}
+{% else %}
+<form method="POST" action="http://localhost:8000/u/{{registered_user.user.username}}/" style="margin: 0 auto; width:50%; display:block; text-align:center">{% csrf_token %}
     {{review}}
-    <input type="submit" value="Add Review">
+    <input style="" type="submit" value="Add Review">
 </form>
 
+{% endif %}
+
 {% for i in reviews %}
-    <table>
+    <p>&nbsp</p>
+    <table style="margin:0 auto; width:30%; border-style:solid; text-align:center">
         <tr>
             <td>Rater</td>
             <td><strong>{{ i.rater.user.username }}</strong></td>
@@ -95,6 +120,5 @@
         </tr>
     </table>
 {% endfor %}
-
 
 {% endblock content %}

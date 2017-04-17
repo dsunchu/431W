@@ -4,6 +4,8 @@ from .forms import *
 from django.shortcuts import redirect, render_to_response
 from django.contrib.auth import authenticate, login, logout
 from decimal import Decimal
+from django.db.models import Q
+import operator
 import multiprocessing
 import datetime
 from .tasks import add
@@ -449,9 +451,18 @@ def create_user_list(request,user_name):
     return render(request, 'items/add_list.html',{'form':form})
 
 
+#Trying to implement search
 
 
+def SearchView(request):
 
+    query = {}
+    for i in request.META["QUERY_STRING"].split("&"):
+        query[i.split("=")[0]] = i.split("=")[1]
 
+    search = query["search"]
+    query_results = sale_items.objects.filter(Q(item_name__icontains=search) |
+                                              Q(description__icontains=search))
 
+    return render(request, 'database/search_results.html', {'query_results':query_results, 'search':search})
 

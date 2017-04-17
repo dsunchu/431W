@@ -11,29 +11,37 @@
   <body>
 
     <!-- Start Top Bar -->
-    <div class="top-bar" style="background-color:#566377">
-      <div class="top-bar-left" style="background-color:#566377">
-        <ul class="menu" style="background-color:#566377;">
-          <li class="menu-text" style="background-color:#566377; color:white; font-size:30px;font-family:'Julius Sans One', sans-serif;">Congo</li>      <!-- '/' only for localhost -->
-          <li style="background-color:#566377;"><a href="http://localhost:8000/create_user/" style="color:white;"/>Create Account</a></li>
-          <li style="background-color:#566377;"><a href="http://localhost:8000/create_supplier/" style="color:white;"/>Create Supplier Account</a></li>
+    <div class="top-bar" style="background-color:#566377; align:left;">
+
+        <ul style="display:inline-block;background-color:#566377; list-style-type:none; margin:0 padding:0; overflow:hidden;">
+          <li style="float:left; background-color:#566377; color:white; font-size:30px;font-family:'Julius Sans One', sans-serif;">Congo</li>      <!-- '/' only for localhost -->
+          <li style="padding:12px 30px; display:block; ;background-color:#566377; float:left"><a href="http://localhost:8000/create_user/" style="color:white;"/>Create Account</a></li>
+          <li style="padding:12px 30px; display:block; float:left; background-color:#566377;"><a href="http://localhost:8000/create_supplier/" style="color:white;"/>Create Supplier Account</a></li>
           {% if user.is_authenticated == 1 %}
-          <li style="width:8%;"><a style="color:white; margin-top:5px; border-style:solid;"href="http://localhost:8000/sell/"/>Register Sale Item</a></li>
+          <li style="padding:12px 30px; display:block; float:left; color:white;"><a style="color:white; margin-top:5px; border-style:solid; padding:8px"href="http://localhost:8000/sell/"/>Register Sale Item</a></li>
           {% endif %}
         </ul>
-      </div>
-      <div class="top-bar-right" style="background-color:#566377;">
-        <ul class="menu" style="background-color:#566377;">
-          <li style="width:24%;"> <input style="width:150%; margin-top:5px" type="text" id="search" placeholder="Search our inventory..." required></li>
-          <li style="margin-left:20px;"> <input style="margin-left:115px; margin-top:5px;height:39px; width:75px;" type="submit" value="Search" id="submit"></li>
-          {% if user.is_authenticated == 1 %}
-          <li style="color:white; margin-right:20px; padding: 15px;"><b>Welcome, {{ user.username }}</b></li>
-          <li><a href="http://localhost:8000/" style="color:white;"/>Home</a></li>
-          <li><a onclick="validate();" style="color:white;">View Profile</a></li>
 
-            <li><a href="http://localhost:8000/logout/" style="color:white;"/>Logout</a></li>
+
+        <ul style="float:right; color: white;display:inline-block; background-color:#566377; list-style-type:none; margin:0; padding:0; overflow:hidden;">
+
+          {% if user.is_authenticated == 1 %}
+          <li style="float:left; padding:5px 30px;  display:block;">
+            <form action="/search_results/">
+              <input style="width:250px; border:2px solid #ccc; border-radius:4px; ;"type="search" name="search" placeholder="Search our inventory...">
+            </form>
+          </li>
+          <li style="float:left; padding:12px 30px; display:block;"><b>Welcome, {{ user.username }}</b></li>
+          <li style="float:left; padding:12px 30px; display:block;"><a href="http://localhost:8000/" style="color:white;"/>Home</a></li>
+          <li style="float:left; padding:12px 30px; display:block;"><a onclick="validate();" style="color:white;">View Profile</a></li>
+          <li style="float:left; padding:12px 30px; display:block;"><a href="http://localhost:8000/logout/" style="color:white;"/>Logout</a></li>
           {% else %}
-            <li style="width:8%;"><a style="color:white; margin-top:5px; border-style:solid;"href="http://localhost:8000/login/"/>Login</a></li>
+          <li style="float:left; padding:5px 30px;  display:block;">
+            <form action="/search_results/">
+              <input style="width:700px; border:2px solid #ccc; border-radius:4px; ;"type="search" name="search" placeholder="Search our inventory...">
+            </form>
+          </li>
+            <li style="float:left; padding:12px 30px; display:block;"><a style="color:white; margin-top:5px; border-style:solid; padding:8px"href="http://localhost:8000/login/"/>Login</a></li>
           {% endif %}
 
 
@@ -43,7 +51,6 @@
             {% endfor %}
           {% endif %}
         </ul>
-      </div>
     </div>
     <!-- End Top Bar -->
 
