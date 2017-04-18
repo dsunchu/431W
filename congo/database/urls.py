@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^u/(?P<user_name>\w+)/$',views.view_user_sale_items, name='user_profile'),
     url(r'^u/(?P<user_name>\w+)/create_user_list/$',views.create_user_list,name='create_user_list'),
     url(r'^u/(?P<user_name>\w+)/view_list/$', views.view_user_list, name='view_user_list'),
+    url(r'^u/(?P<user_name>\w+)/order_history/$', views.display_orders, name='display_order'),
     url(r'^view_users/$',views.view_users,name='view_users'),
     url(r'^create_user/$', views.create_user,name='create_user'),
     #url(r'^create_user/create_user_info/$', views.create_user_info,name='create_user_info'),

@@ -65,12 +65,12 @@
     <input type="submit" value="Place Bid">
 </form>
 {% endif %}
-<form method="POST" action="http://localhost:8000/items/{{s.item_id}}/">{% csrf_token %}
+<form method="POST">{% csrf_token %}
     {{list}}
     <input type="submit" value="Add to List">
 </form>
 
-<form method="POST" action="http://localhost:8000/items/{{s.item_id}}/">{% csrf_token %}
+<form method="POST">{% csrf_token %}
     {{review}}
     <input type="submit" value="Add Review">
 </form>

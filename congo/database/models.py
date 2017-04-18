@@ -176,7 +176,7 @@ class orders(models.Model):
     confirmed_purchase = models.BooleanField(default=False)
     shipment_status = models.CharField(max_length=10, choices=SALE_ITEM_CHOICES,null=True)
     tracking_number = models.IntegerField(null=True)
-
+    aggregate_with = models.ForeignKey('self',null=True)
 
 class bids(models.Model):
     bid_id = models.AutoField(primary_key=True)

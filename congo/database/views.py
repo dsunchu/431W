@@ -249,17 +249,24 @@ def item_page(request,item_id):
                 r.verified_purchase = True
             r.save()
             #need to refresh page for avg rating to propogate
-            for w in item_reviews:
-                sum += w.stars
-            sum = sum / item_reviews.count()
-            i.average_rating = sum
+
+            if item_reviews.count() is not None:
+                for w in item_reviews:
+                    sum += w.stars
+                sum = sum / item_reviews.count()
+                i.average_rating = sum
+            else:
+                i.average_rating = r.stars
             i.save()
+
+            return render(request,'items/upload_success.html')
 
         if list.is_valid():
             add_to_list = user_list.objects.get(user = registered_user,list_name=list['list_name'].value())
             print("added item to list: ",add_to_list.list_name,i.item_id.item_id)
             add_to_list.item.add(i)
             add_to_list.save()
+            return render(request,'items/upload_success.html')
 
     else:
         if s.type == 'L':
@@ -385,9 +392,11 @@ def purchase(request,item_id):
     if request.method=='POST':
         order = orders_form(request.POST,username=request.user.username)
         if order.is_valid():
-            #order['amount'] = request.session['amount']
-            #if order.save():
             r = RegisteredUser.objects.get(user__username=request.user.username)
+            #find other orders to the same place and date
+            a = orders.objects.filter(ship_date = order['ship_date'].value(),
+                                      ship_address=order['ship_address'].value(),
+                                     user=r)
             i = sale_items.objects.get(item_id__item_id=item_id)
             o = orders.objects.create(credit_card=order['credit_card'].value(),
                                       ship_date = order['ship_date'].value(),
@@ -397,7 +406,15 @@ def purchase(request,item_id):
             #set order info
             o.user = r
             o.item = i
-            o.amount = request.session['amount']
+
+            #set aggregate if query exists
+            if a is not None:
+                for k in a:
+                    if k.aggregate_with is not None:
+                        pass
+                    else:
+                        o.aggregate_with = k
+
 
             #determine if seller is user or supplier
             if s.user is not None:
@@ -465,4 +482,9 @@ def SearchView(request):
                                               Q(description__icontains=search))
 
     return render(request, 'database/search_results.html', {'query_results':query_results, 'search':search})
+
+
+def display_orders(request,user_name):
+    o = orders.objects.filter(user__user__username=user_name)
+    return render(request,'database/order_history.html',{'orders':o})
 

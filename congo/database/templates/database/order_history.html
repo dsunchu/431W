@@ -1,0 +1,44 @@
+{% extends "database/base.html" %}
+<!---- purchase page after user clicks purchase --->
+{% block content%}
+
+{% for i in orders %}
+<table>
+    <tr>
+        <td>Name</td>
+        <td><strong>{{ i.item.item_name }}</strong></td>
+    </tr>
+    <tr>
+        <td>Order Date</td>
+        <td><strong>{{ i.order_date }}</strong></td>
+    </tr>
+    <tr>
+        <td>ID</td>
+        <td><strong>{{ i.order_id }}</strong></td>
+    </tr>
+    <tr>
+        <td>Order Time</td>
+        <td><strong>{{ i.order_time }}</strong></td>
+    </tr>
+    <tr>
+        <td>Tracking number</td>
+        <td><strong>{{ i.tracking_number }}</strong></td>
+    </tr>
+    <tr>
+        <td>Seller</td>
+        <td><strong>{{ i.seller }}</strong></td>
+    </tr>
+    <tr>
+        <td>Status</td>
+        <td><strong>{{ i.shipment_status }}</strong></td>
+    </tr>
+    {% if i.aggregate_with %}
+    <tr>
+        <td>Shipped With</td>
+        <td><strong>{{ i.aggregate_with.item_id }}</strong></td>
+    </tr>
+    {% endif %}
+</table>
+{% endfor %}
+
+{% endblock content %}
