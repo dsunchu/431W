@@ -159,5 +159,5 @@ class add_list_form(forms.Form):
 class search_form(forms.Form):
     options = categories.objects.all()
     category = forms.ModelChoiceField(options, initial={'All':'All'}, label='')
-    search = forms.CharField(max_length=100, label='', required=False)
+    search = forms.CharField(max_length=100, label='', required=False, widget=forms.TextInput(attrs={'placeholder': 'Search our inventory...'}))
 

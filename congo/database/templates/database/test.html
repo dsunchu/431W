@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html class="no-js" lang="en">
   <head>
@@ -6,74 +7,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Congo</title>
     <link rel="stylesheet" href="http://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.min.css">
-    <style>
-         #nav {
-            height:10%;
-            width:100%;
-            background-color:#566377;
-            text-align:center;
-            list-style-type:none;
-         }
-         #nav li {
-            color:white;
-            margin-top:.7%;
-            float:left;
-         }
 
-         #nav a {
-            color:white;
-            text-decoration:none;
-         }
+      <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/foundation/6.0.1/css/foundation.css">
+      <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/motion-ui/1.1.1/motion-ui.css">
 
-    </style>
+      <script src = "https://cdnjs.cloudflare.com/ajax/libs/foundation/6.0.1/js/vendor/jquery.min.js"></script>
+      <script src = "https://cdnjs.cloudflare.com/ajax/libs/foundation/6.0.1/js/foundation.min.js"></script>
+      <style>
+        body {
+        background-image: url("http://i.imgur.com/oatDfvv.jpg");
+        background-repeat:no-repeat;
+        background-size: 100%;
+        }
+      </style>
   </head>
-  <body>
 
-    <!-- Start Top Bar -->
-<div id="nav">
-    <ul style="margin-left:8%;  text-align:center; display:inline-block; list-style-type:none; width:100%;" >
-        <li style="float:left; color: white; font-size:30px; font-family:'Julius Sans One';"><a href="localhost:/8000">Congo</a></li>
-        <li style="margin-top:1.5%; padding: 0 2%;"><a href="http://localhost:8000/create_user/">Create Account</a></li>
-        <li style="margin-top:1.5%;"><a href="http://localhost:8000/create_supplier/">Create Supplier Account</a></li>
-        {% if user.is_authenticated == 1 %}
-        <li style="margin-top:1.5%; padding:0 2%;"><a href="http://localhost:8000/sell/">Register Item</a></li>
-        {% endif %}
 
-        <form style="float:left" action="" method="post">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-            <li style="float:left; width:15%; margin-top:3%;">{{ form.category }}</li>
-            <li style="float:left; margin-top:3%;">{{ form.search }} </li>
-        </form>
+    <!-- Start Top Bar  -->
+    <div class="top-bar" style="background-color:rgba(38, 57, 23, .2)" >
+        <center>
+            <p style="font-size: 2px"><br></p>
+            <img src="http://i.imgur.com/b3kKbcA.png" alt="Meme man" height="175" width="175" align="middle">
+            <p style="font-size: 2px"><br></p>
+            <p style="text-align:center; background-color:rgba(38, 57, 23, .00); color:white; font-size:52px;font-family:'Julius Sans One', sans-serif;"><b>Congo</b></p>
 
-        {% if user.is_authenticated == 1 %}
-            <li style="margin-top:1.5%; margin-left:-8%;">
-                Welcome, {{ user.username }}
-            </li>
-        {% endif %}
+            <form  method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+                <div style="margin:0 auto; width:10%;">
+                    {{ form.category }}
+                </div>
+                <div>
+                    {{ form.search }}
+                </div>
+            </form>
+            <p>&nbsp</p>
+        </center>
 
-        <li style="margin-top:1.5%; padding: 0 2%;"><a href="http://localhost:8000/">Home</a></li>
-        <li style="margin-top:1.5%;"><a onclick="validate();">View Profile</a></li>
-        {% if user.is_authenticated == 1 %}
-            <li style="float:left; margin-top:1.5%; margin-left:2%;"><a style="border-style:solid; border-radius:5px; padding:10px;"href="http://localhost:8000/logout/">Logout</a></li>
-        {% endif %}
-      {% if registered_user.auction_flag %}
+        <ul style="float:left; color: white;display:inline-block; background-color:rgba(38, 57, 23, .00); list-style-type:none; margin:0; padding:0; overflow:hidden;">
+            {% if user.is_authenticated == 1 %}
+          <li style="float:left; padding:12px 30px; display:block;"><b>Welcome, {{ user.username }}</b></li>
+          <li style="float:left; padding:12px 30px; display:block;"><a href="http://localhost:8000/" style="color:white;"/>Home</a></li>
+          <li style="float:left; padding:12px 30px; display:block;"><a onclick="validate();" style="color:white;">View Profile</a></li>
+          <li style="float:left; padding:12px 30px; display:block;"><a href="http://localhost:8000/logout/" style="color:white;"/>Logout</a></li>
+          {% else %}
+            <li style="float:left; padding:12px 30px; display:block;"><a style="color:white; margin-top:5px; border-style:solid; padding:8px"href="http://localhost:8000/login/"/>Login</a></li>
+          {% endif %}
+        </ul>
+        <ul style="float:right; display:inline-block;background-color:rgba(38, 57, 23, .00); list-style-type:none; margin:0 padding:0;">
+                <!-- '/' only for localhost -->
+          <li style="padding:12px 30px; display:block; float:left"><a href="http://localhost:8000/create_user/" style="color:white;"/>Create Account</a></li>
+          <li style="padding:12px 30px; display:block; float:left"><a href="http://localhost:8000/create_supplier/" style="color:white;"/>Create Supplier Account</a></li>
+          {% if user.is_authenticated == 1 %}
+          <li style="padding:12px 30px; display:block; color:white; float:left;"><a style="color:white; margin-top:5px; border-style:solid; padding:8px"href="http://localhost:8000/sell/"/>Register Sale Item</a></li>
+          {% endif %}
+        </ul>
+
+
+
+
+
+          {% if registered_user.auction_flag %}
             {% for i in registered_user.auction_winner.all %}
               <li style="width:8%;"><a style="color:white; margin-top:5px; border-style:solid;"href="http://localhost:8000/items/{{i.item_id.item_id}}/purchase/"/>Winner for Item {{i.item_id.item_id}}!</a></li>
             {% endfor %}
           {% endif %}
-    </ul>
-</div>
+        </ul>
+    </div>
+    <!-- End Top Bar -->
+
 
     <div class="orbit" role="region" aria-label="Favorite Space Pictures" data-orbit>
       <ul class="orbit-container">
         <button class="orbit-previous" aria-label="previous"><span class="show-for-sr">Previous Slide</span>&#9664;</button>
         <button class="orbit-next" aria-label="next"><span class="show-for-sr">Next Slide</span>&#9654;</button>
         <li class="orbit-slide is-active">
-          <a href="http://localhost:8000/search_results/?search=mothers+day"><img src="http://i.imgur.com/JD6y7G5.jpg" /></a>
-        </li>
-        <li class="orbit-slide">
-
+          <img src="http://i.imgur.com/JD6y7G5.jpg">
         </li>
         <li class="orbit-slide">
           <img src="http://overbyinkjetsolutions-com.3dcartstores.com/assets/images/Winter%20Parts%20Sale.jpg">
@@ -99,14 +108,14 @@
         <h5>Nulla At Nulla Justo, Eget</h5>
         <p>$400</p>
         <!--linked this button to a auction item change this on local copies -->
-        <a href="http://localhost:8000/items/27/" class="button expanded"/>Bid</a>
+        <a href="http://localhost:8000/items/8/" class="button expanded"/>Bid</a>
       </div>
       <div class="column">
         <img class="thumbnail" src="http://placehold.it/300x400">
         <h5>Nulla At Nulla Justo, Eget</h5>
         <p>$400</p>
         <!--linked this button to a listed price item change this on local copies -->
-        <a href="http://localhost:8000/items/27/" class="button expanded"/>Buy</a>
+        <a href="http://localhost:8000/items/7/" class="button expanded"/>Buy</a>
       </div>
       <div class="column">
         <img class="thumbnail" src="http://placehold.it/300x400">

@@ -502,17 +502,17 @@ def create_user_list(request,user_name):
 
 
 def SearchView(request):
-    query = {}
+    query1 = {}
 
     for i in request.META["QUERY_STRING"].split("&"):
-        query[i.split("=")[0]] = i.split("=")[1]
+        query1[i.split("=")[0]] = i.split("=")[1]
 
-    search = query["search"]
-    query_results = sale_items.objects.filter(Q(item_name__icontains=search) |
+    search = query1["search"]
+    query = sale_items.objects.filter(Q(item_name__icontains=search) |
                                               Q(description__icontains=search))
 
 
-    return render(request, 'database/search_results.html', {'query_results':query_results, 'search':search})
+    return render(request, 'database/search_results.html', {'query':query, 'search':search})
 
 
 def display_orders(request,user_name):
