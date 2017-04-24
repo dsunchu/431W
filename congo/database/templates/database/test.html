@@ -7,42 +7,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Congo</title>
     <link rel="stylesheet" href="http://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.min.css">
+
+      <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/foundation/6.0.1/css/foundation.css">
+      <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/motion-ui/1.1.1/motion-ui.css">
+
+      <script src = "https://cdnjs.cloudflare.com/ajax/libs/foundation/6.0.1/js/vendor/jquery.min.js"></script>
+      <script src = "https://cdnjs.cloudflare.com/ajax/libs/foundation/6.0.1/js/foundation.min.js"></script>
+      <style>
+        body {
+        background-image: url("http://i.imgur.com/oatDfvv.jpg");
+        background-repeat:no-repeat;
+        background-size: 100%;
+        }
+      </style>
   </head>
-  <body>
+
 
     <!-- Start Top Bar -->
-    <div class="top-bar" style="background-color:#566377; align:left;">
-
-        <ul style="display:inline-block;background-color:#566377; list-style-type:none; margin:0 padding:0; overflow:hidden;">
-          <li style="float:left; background-color:#566377; color:white; font-size:30px;font-family:'Julius Sans One', sans-serif;">Congo</li>      <!-- '/' only for localhost -->
-          <li style="padding:12px 30px; display:block; ;background-color:#566377; float:left"><a href="http://localhost:8000/create_user/" style="color:white;"/>Create Account</a></li>
-          <li style="padding:12px 30px; display:block; float:left; background-color:#566377;"><a href="http://localhost:8000/create_supplier/" style="color:white;"/>Create Supplier Account</a></li>
-          {% if user.is_authenticated == 1 %}
-          <li style="padding:12px 30px; display:block; float:left; color:white;"><a style="color:white; margin-top:5px; border-style:solid; padding:8px"href="http://localhost:8000/sell/"/>Register Sale Item</a></li>
-          {% endif %}
-        </ul>
-
-
-        <ul style="float:right; color: white;display:inline-block; background-color:#566377; list-style-type:none; margin:0; padding:0; overflow:hidden;">
-
-          {% if user.is_authenticated == 1 %}
-          <li style="float:left; padding:5px 30px;  display:block;">
+    <div class="top-bar" style="background-color:rgba(38, 57, 23, .2)" >
+        <center>
+            <p style="font-size: 2px"><br></p>
+            <img src="http://i.imgur.com/b3kKbcA.png" alt="Meme man" height="175" width="175" align="middle">
+            <p style="font-size: 2px"><br></p>
+            <p style="text-align:center; background-color:rgba(38, 57, 23, .00); color:white; font-size:52px;font-family:'Julius Sans One', sans-serif;"><b>Congo</b></p>
+            <p style="padding:5px 30px;  display:block;">
             <form action="/search_results/">
-              <input style="width:250px; border:2px solid #ccc; border-radius:4px; ;"type="search" name="search" placeholder="Search our inventory...">
+              <input style="width:250px; border:2px solid #ccc; border-radius:4px; text-align:center;"type="search" name="search" placeholder="Search our inventory...">
             </form>
-          </li>
+            </p>
+        </center>
+
+        <ul style="float:left; color: white;display:inline-block; background-color:rgba(38, 57, 23, .00); list-style-type:none; margin:0; padding:0; overflow:hidden;">
+            {% if user.is_authenticated == 1 %}
           <li style="float:left; padding:12px 30px; display:block;"><b>Welcome, {{ user.username }}</b></li>
           <li style="float:left; padding:12px 30px; display:block;"><a href="http://localhost:8000/" style="color:white;"/>Home</a></li>
           <li style="float:left; padding:12px 30px; display:block;"><a onclick="validate();" style="color:white;">View Profile</a></li>
           <li style="float:left; padding:12px 30px; display:block;"><a href="http://localhost:8000/logout/" style="color:white;"/>Logout</a></li>
           {% else %}
-          <li style="float:left; padding:5px 30px;  display:block;">
-            <form action="/search_results/">
-              <input style="width:700px; border:2px solid #ccc; border-radius:4px; ;"type="search" name="search" placeholder="Search our inventory...">
-            </form>
-          </li>
             <li style="float:left; padding:12px 30px; display:block;"><a style="color:white; margin-top:5px; border-style:solid; padding:8px"href="http://localhost:8000/login/"/>Login</a></li>
           {% endif %}
+        </ul>
+        <ul style="float:right; display:inline-block;background-color:rgba(38, 57, 23, .00); list-style-type:none; margin:0 padding:0;">
+                <!-- '/' only for localhost -->
+          <li style="padding:12px 30px; display:block; float:left"><a href="http://localhost:8000/create_user/" style="color:white;"/>Create Account</a></li>
+          <li style="padding:12px 30px; display:block; float:left"><a href="http://localhost:8000/create_supplier/" style="color:white;"/>Create Supplier Account</a></li>
+          {% if user.is_authenticated == 1 %}
+          <li style="padding:12px 30px; display:block; color:white; float:left;"><a style="color:white; margin-top:5px; border-style:solid; padding:8px"href="http://localhost:8000/sell/"/>Register Sale Item</a></li>
+          {% endif %}
+        </ul>
+
+
+
 
 
           {% if registered_user.auction_flag %}
@@ -61,9 +76,6 @@
         <button class="orbit-next" aria-label="next"><span class="show-for-sr">Next Slide</span>&#9654;</button>
         <li class="orbit-slide is-active">
           <img src="https://unfade.io/wp-content/uploads/2017/02/unfade-merry-christmas-2000x687.jpeg">
-        </li>
-        <li class="orbit-slide">
-
         </li>
         <li class="orbit-slide">
           <img src="http://overbyinkjetsolutions-com.3dcartstores.com/assets/images/Winter%20Parts%20Sale.jpg">

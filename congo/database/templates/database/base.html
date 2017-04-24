@@ -10,42 +10,35 @@
   <body>
 
     <!-- Start Top Bar -->
-    <div class="top-bar" style="background-color:#566377; align:left;">
-
-        <ul style="display:inline-block;background-color:#566377; list-style-type:none; margin:0 padding:0; overflow:hidden;">
-          <li style="float:left; background-color:#566377; color:white; font-size:30px;font-family:'Julius Sans One', sans-serif;">Congo</li>      <!-- '/' only for localhost -->
-          <li style="padding:12px 30px; display:block; ;background-color:#566377; float:left"><a href="http://localhost:8000/create_user/" style="color:white;"/>Create Account</a></li>
-          <li style="padding:12px 30px; display:block; float:left; background-color:#566377;"><a href="http://localhost:8000/create_supplier/" style="color:white;"/>Create Supplier Account</a></li>
-          {% if user.is_authenticated == 1 %}
-          <li style="padding:12px 30px; display:block; float:left; color:white;"><a style="color:white; margin-top:5px; border-style:solid; padding:8px"href="http://localhost:8000/sell/"/>Register Sale Item</a></li>
-          {% endif %}
-        </ul>
-
-
-        <ul style="float:right; color: white;display:inline-block; background-color:#566377; list-style-type:none; margin:0; padding:0; overflow:hidden;">
-
-          {% if user.is_authenticated == 1 %}
-          <li style="float:left; padding:5px 30px;  display:block;">
+    <div class="top-bar" style="background-color:#385723; align:left;">
+        <center>
+          <p style="text-align:center; color:white; font-size:40px; font-family:'Julius Sans One', sans-serif"><a href="http://localhost:8000/" style="color:white"><b>Congo</b></a></p>
+          <p style="  display:block;">
             <form action="/search_results/">
-              <input style="width:250px; border:2px solid #ccc; border-radius:4px; ;"type="search" name="search" placeholder="Search our inventory...">
+              <input style="width:250px; border:2px solid #ccc; border-radius:4px; text-align:center;"type="search" name="search" placeholder="Search our inventory...">
             </form>
-          </li>
+          </p>
+        </center>
+        <ul style="float:left; color: white;display:inline-block; background-color:rgba(38, 57, 23, .00); list-style-type:none; margin:0; padding:0; overflow:hidden;">
+          {% if user.is_authenticated == 1 %}
           <li style="float:left; padding:12px 30px; display:block;"><b>Welcome, {{ user.username }}</b></li>
           <li style="float:left; padding:12px 30px; display:block;"><a href="http://localhost:8000/" style="color:white;"/>Home</a></li>
           <li style="float:left; padding:12px 30px; display:block;"><a onclick="validate();" style="color:white;">View Profile</a></li>
           <li style="float:left; padding:12px 30px; display:block;"><a href="http://localhost:8000/logout/" style="color:white;"/>Logout</a></li>
           {% else %}
-          <li style="float:left; padding:5px 30px;  display:block;">
-            <form action="/search_results/">
-              <input style="width:700px; border:2px solid #ccc; border-radius:4px; ;"type="search" name="search" placeholder="Search our inventory...">
-            </form>
-          </li>
             <li style="float:left; padding:12px 30px; display:block;"><a style="color:white; margin-top:5px; border-style:solid; padding:8px"href="http://localhost:8000/login/"/>Login</a></li>
           {% endif %}
-
-
         </ul>
-      </div>
+
+        <ul style="float:right; display:inline-block;background-color:rgba(38, 57, 23, .00); list-style-type:none; margin:0 padding:0;">
+                <!-- '/' only for localhost -->
+          <li style="padding:12px 30px; display:block; float:left"><a href="http://localhost:8000/create_user/" style="color:white;"/>Create Account</a></li>
+          <li style="padding:12px 30px; display:block; float:left"><a href="http://localhost:8000/create_supplier/" style="color:white;"/>Create Supplier Account</a></li>
+          {% if user.is_authenticated == 1 %}
+          <li style="padding:12px 30px; display:block; color:white; float:left;"><a style="color:white; margin-top:5px; border-style:solid; padding:8px"href="http://localhost:8000/sell/"/>Register Sale Item</a></li>
+          {% endif %}
+        </ul>
+    </div>
 {% block content %}
 {% endblock %}
 
