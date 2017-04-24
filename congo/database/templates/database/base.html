@@ -6,46 +6,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Congo</title>
     <link rel="stylesheet" href="http://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.min.css">
+      <style>
+         #nav {
+            height:10%;
+
+            background-color:#566377;
+            text-align:center;
+            list-style-type:none;
+         }
+         #nav li {
+            color:white;
+            margin-top:.7%;
+            float:left;
+         }
+
+         #nav a {
+            color:white;
+            text-decoration:none;
+         }
+
+    </style>
   </head>
   <body>
 
     <!-- Start Top Bar -->
-    <div class="top-bar" style="background-color:#566377; align:left;">
-
-        <ul style="display:inline-block;background-color:#566377; list-style-type:none; margin:0 padding:0; overflow:hidden;">
-          <li style="float:left; background-color:#566377; color:white; font-size:30px;font-family:'Julius Sans One', sans-serif;">Congo</li>      <!-- '/' only for localhost -->
-          <li style="padding:12px 30px; display:block; ;background-color:#566377; float:left"><a href="http://localhost:8000/create_user/" style="color:white;"/>Create Account</a></li>
-          <li style="padding:12px 30px; display:block; float:left; background-color:#566377;"><a href="http://localhost:8000/create_supplier/" style="color:white;"/>Create Supplier Account</a></li>
-          {% if user.is_authenticated == 1 %}
-          <li style="padding:12px 30px; display:block; float:left; color:white;"><a style="color:white; margin-top:5px; border-style:solid; padding:8px"href="http://localhost:8000/sell/"/>Register Sale Item</a></li>
-          {% endif %}
-        </ul>
-
-
-        <ul style="float:right; color: white;display:inline-block; background-color:#566377; list-style-type:none; margin:0; padding:0; overflow:hidden;">
-
-          {% if user.is_authenticated == 1 %}
-          <li style="float:left; padding:5px 30px;  display:block;">
+    <div id="nav">
+    <ul style="margin-left:8%;  text-align:center; display:inline-block; list-style-type:none; width:100%;" >
+        <li style="float:left; color: white; font-size:30px; font-family:'Julius Sans One';"><a href="http://localhost:8000">Congo</a></li>
+        <li style="margin-top:1.5%; padding: 0 2%;"><a href="http://localhost:8000/create_user/">Create Account</a></li>
+        <li style="margin-top:1.5%;"><a href="http://localhost:8000/create_supplier/">Create Supplier Account</a></li>
+        {% if user.is_authenticated == 1 %}
+        <li style="margin-top:1.5%; padding:0 2%;"><a href="http://localhost:8000/sell/">Register Item</a></li>
+        {% endif %}
+        <li style="margin-top:1%;">
+            <select>
+                {% for x in q %}
+                    <option value={{x.category_name}}>{{x.category_name}}</option>
+                {% endfor%}
+            </select>
+        </li>
+        <li style="margin-top:1%;">
             <form action="/search_results/">
-              <input style="width:250px; border:2px solid #ccc; border-radius:4px; ;"type="search" name="search" placeholder="Search our inventory...">
+                <input style="border:2px solid #ccc; border-radius 4px;" type="search" name="search" placeholder="Search our inventory...">
             </form>
-          </li>
-          <li style="float:left; padding:12px 30px; display:block;"><b>Welcome, {{ user.username }}</b></li>
-          <li style="float:left; padding:12px 30px; display:block;"><a href="http://localhost:8000/" style="color:white;"/>Home</a></li>
-          <li style="float:left; padding:12px 30px; display:block;"><a onclick="validate();" style="color:white;">View Profile</a></li>
-          <li style="float:left; padding:12px 30px; display:block;"><a href="http://localhost:8000/logout/" style="color:white;"/>Logout</a></li>
-          {% else %}
-          <li style="float:left; padding:5px 30px;  display:block;">
-            <form action="/search_results/">
-              <input style="width:700px; border:2px solid #ccc; border-radius:4px; ;"type="search" name="search" placeholder="Search our inventory...">
-            </form>
-          </li>
-            <li style="float:left; padding:12px 30px; display:block;"><a style="color:white; margin-top:5px; border-style:solid; padding:8px"href="http://localhost:8000/login/"/>Login</a></li>
-          {% endif %}
+        </li>
+        {% if user.is_authenticated == 1 %}
+            <li style="margin-top:1.5%; margin-left:2%;">
+                Welcome, {{ user.username }}
+            </li>
+        {% endif %}
 
-
-        </ul>
-      </div>
+        <li style="margin-top:1.5%; padding: 0 2%;"><a href="http://localhost:8000/">Home</a></li>
+        <li style="margin-top:1.5%;"><a onclick="validate();">View Profile</a></li>
+        {% if user.is_authenticated == 1 %}
+            <li style="float:left; margin-top:1.5%; margin-left:2%;"><a style="border-style:solid; border-radius:5px; padding:10px;"href="http://localhost:8000/logout/">Logout</a></li>
+        {% endif %}
+    </ul>
+</div>
 {% block content %}
 {% endblock %}
 
@@ -85,5 +102,6 @@
       window.location.href="http://localhost:8000/u/"+username+"/";
       }
   </script>
+
   </body>
 </html>

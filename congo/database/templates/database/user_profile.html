@@ -3,13 +3,13 @@
 {% block content %}
 {% if user.username == registered_user.username %}
 <p>&nbsp</p>
-<ul style="width:100%; margin:0 auto; list-style-type:none; padding: 0; overflow:hidden">
-    <li style="float:left; padding:10px"><a href="http://localhost:8000/add_credit_card/" />Add Credit Card</a></li>
-    <li style="float:left; padding:10px"><a href="http://localhost:8000/add_address/" />Add Address</a></li>
-    <li style="float:left; padding:10px"> <a href="http://localhost:8000/add_email/" />Add Email</a></li>
-    <li style="float:left; padding:10px"><a href="http://localhost:8000/u/{{registered_user.user.username}}/create_user_list/" />Add List</a></li>
-    <li style="float:left; padding:10px"><a href="http://localhost:8000/u/{{registered_user.user.username}}/view_list/" />View Lists</a></li>
-    <li style="float:left; padding:10px"><a href="http://localhost:8000/u/{{registered_user.user.username}}/order_history/" />View Previous Orders</a></li>
+<ul style="background-color:#949CA8;width:45%;margin:0 auto; list-style-type:none; padding: 0; overflow:hidden">
+    <li style="float:left; padding:10px"><a style="color:white;"href="http://localhost:8000/add_credit_card/" />Add Credit Card</a></li>
+    <li style="float:left; padding:10px"><a style="color:white;" href="http://localhost:8000/add_address/" />Add Address</a></li>
+    <li style="float:left; padding:10px"> <a style="color:white;"  href="http://localhost:8000/add_email/" />Add Email</a></li>
+    <li style="float:left; padding:10px"><a style="color:white;" href="http://localhost:8000/u/{{registered_user.user.username}}/create_user_list/" />Add List</a></li>
+    <li style="float:left; padding:10px"><a style="color:white;" href="http://localhost:8000/u/{{registered_user.user.username}}/view_list/" />View Lists</a></li>
+    <li style="float:left; padding:10px"><a style="color:white;" href="http://localhost:8000/u/{{registered_user.user.username}}/order_history/" />View Previous Orders</a></li>
 </ul>
 
 {% endif %}
@@ -58,7 +58,7 @@
 
 {% for i in items %}
 <p>&nbsp</p>
-    <table style="margin: 0 auto;">
+    <table style="margin: 0 auto; width:50%;">
         <tr>
             <td>Name</td>
             <td><strong>{{ i.item_name }}</strong></td>
@@ -108,7 +108,7 @@
     <table style="margin:0 auto; width:30%; border-style:solid; text-align:center">
         <tr>
             <td>Rater</td>
-            <td><strong>{{ i.rater.user.username }}</strong></td>
+            <td><strong><a href="http://localhost:8000/u/{{i.rater.user.username}}">{{ i.rater.user.username }}</a></strong></td>
         </tr>
         <tr>
             <td>Stars</td>

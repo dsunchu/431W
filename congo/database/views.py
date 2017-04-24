@@ -5,6 +5,9 @@ from django.shortcuts import redirect, render_to_response
 from django.contrib.auth import authenticate, login, logout
 from decimal import Decimal
 from django.db.models import Q
+from django.http import HttpResponseRedirect
+from django.contrib.sessions.middleware import SessionMiddleware
+from itertools import chain
 import operator
 import multiprocessing
 import datetime
@@ -77,6 +80,7 @@ def view_profile(request):
     model_user.username = user_name
     return render(request,'database/create_user_profile.html',{'user':model_user})
 
+
 def create_supplier(request):
     if request.method == "POST":
         form = supplier_form(request.POST)
@@ -124,12 +128,26 @@ def login_user(request):
 
 
 def index_page(request):
+    if request.method == 'POST':
+        form = search_form(request.POST)
+        if form.is_valid():
+            cat = form.cleaned_data['category']
+            search = form.cleaned_data['search']
+            query = sale_items.objects.filter((Q(category__category_name = cat) | Q(category__parent_category = cat)) & (Q(item_name__icontains=search) | Q(description__icontains=search)))
+
+            return render(request, 'database/search_results.html', {'query':query})
+        else:
+            form = search_form()
+
     if request.user.is_authenticated() == 1:
+        form = search_form()
         print("logged in user ",request.user.username)
         r = RegisteredUser.objects.get(user__username=request.user.username)
-        return render(request,'database/test.html',{'registered_user':r})
+        return render(request,'database/test.html',{'registered_user':r, 'form':form})
     else:
-        return render(request, 'database/test.html')
+        form = search_form()
+        return render(request, 'database/test.html', {'form':form})
+
 
 @login_required(login_url='http://localhost:8000/login/')
 def add_credit_card(request):
@@ -170,6 +188,18 @@ def add_address(request):
         form = address_form
         #use same template as add creditcard
     return render(request,'database/add_address.html',{'form':form})
+
+def base(request):
+    if request.method == 'POST':
+        form = search_form(request.POST)
+        if form.is_valid():
+            cat = form.cleaned_data['category']
+            search = form.cleaned_data['search']
+            query = sale_items.objects.filter(Q(category__category_name = cat) | Q(category__parent_category = cat) & (Q(item_name__icontains=search) | Q(description__icontains=search)))
+
+            return render(request, 'database/base.html', {'query':query})
+        else:
+            form = search_form()
 
 @login_required(login_url='http://localhost:8000/login/')
 def add_email(request):
@@ -472,14 +502,15 @@ def create_user_list(request,user_name):
 
 
 def SearchView(request):
-
     query = {}
+
     for i in request.META["QUERY_STRING"].split("&"):
         query[i.split("=")[0]] = i.split("=")[1]
 
     search = query["search"]
     query_results = sale_items.objects.filter(Q(item_name__icontains=search) |
                                               Q(description__icontains=search))
+
 
     return render(request, 'database/search_results.html', {'query_results':query_results, 'search':search})
 

@@ -62,11 +62,13 @@ class upload_list_item_form(forms.ModelForm):
         model = sale_items
         fields = ['item_name',
                   'description',
+                  'category',
                   'url',
                   'place_of_origin',
                   'amount_in_stock',
                   'initial_sale_date',
                   'listed_price']
+
 
 #remember to set valid auction field
 class upload_auction_item_form(forms.ModelForm):
@@ -75,6 +77,7 @@ class upload_auction_item_form(forms.ModelForm):
         model = sale_items
         fields = ['item_name',
                   'description',
+                  'category',
                   'url',
                   'place_of_origin',
                   'amount_in_stock',
@@ -153,4 +156,8 @@ class add_list_form(forms.Form):
         model = user_list
         fields = ['list_name']
 
+class search_form(forms.Form):
+    options = categories.objects.all()
+    category = forms.ModelChoiceField(options, initial={'All':'All'}, label='')
+    search = forms.CharField(max_length=100, label='', required=False)
 

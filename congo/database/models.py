@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from itertools import chain
 
 # Create your models here.
 
@@ -24,18 +24,14 @@ class sale_items(models.Model):
     item_id = models.OneToOneField(sells, on_delete=models.CASCADE,null=True)
     item_name = models.CharField(max_length=50)
     description = models.CharField(max_length=500)
-    url = models.CharField(max_length=100)
+    url = models.CharField(max_length=100, null=True, blank=True)
     place_of_origin = models.CharField(max_length=50)
     amount_in_stock = models.IntegerField()
     initial_sale_date = models.DateField()
     average_rating = models.DecimalField(max_digits=5, decimal_places=4,null=True)
-    def __str__(self):
-        return self.item_name
-
+    category = models.ForeignKey('categories', null=True, blank=True, default='All')
     # auction items
     reserve_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-    #auction_start_date = models.DateField(null=True)
-    #auction_start_time = models.TimeField(null=True)
     auction_end_date = models.DateField(null=True)
     auction_end_time = models.TimeField(null=True)
     valid_auction = models.IntegerField(default=0, null=True)
@@ -43,7 +39,8 @@ class sale_items(models.Model):
 
     # listed items
     listed_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-
+    def __str__(self):
+        return str(self.item_id)
 
 class user_list(models.Model):
     date = models.DateField(auto_now_add=True)
@@ -136,11 +133,8 @@ class categories(models.Model):
     parent_category = models.CharField(max_length=30)
     number_of_items_sold = models.IntegerField()
     number_of_items_contained = models.IntegerField()
-
-
-class part_of_category(models.Model):
-    item = models.ManyToManyField(sale_items)
-    category = models.ManyToManyField(categories)
+    def __str__(self):
+        return self.category_name
 
 
 class item_rating(models.Model):

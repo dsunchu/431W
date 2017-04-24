@@ -8,16 +8,33 @@
 </div>
 {% endfor %}-->
 
+
+{% if search == 'mothers+day' %}
+<h3 style="padding:20px">Search Mother's Day Items</h3>
+{% else %}
 <h3 style="padding:20px">Search Results</h3>
-
-{% for x in query_results %}
-<div style="padding:20px; margin-left:10%;">
-    <div>
-        <img src="http://placehold.it/125x174">
-        <strong>{{x.item_name}} - </strong>{{x.description}}
-
-    </div>
-</div>
+{% endif %}
+{% for x in query %}
+            {{x.category}}
+            <div style="padding:20px; margin-left:10%;">
+                <div>
+                    <img style="width:125px; height:174;float:left; padding:20px" src="https://ss7.vzw.com/is/image/VerizonWireless/iphone6s-spgry-front?fmt=jpg&bgc=f6f6f6&resmode=sharp2&qlt=80,1&wid=352&hei=717">
+                    <p>&nbsp</p>
+                    <strong><a href="http://localhost:8000/items/{{x.item_id}}/purchase">{{x.item_name}}</a> - </strong>{{x.description}}
+                    {% if x.item_id.type == 'A' %}
+                        <strong>(Auction)</strong>
+                    {% else %}
+                    <strong>(${{x.listed_price}})</strong>
+                    {% endif %}
+                    <p style="margin:0;">Ships from: {{x.place_of_origin}}</p>
+                    <p>Sold by: <a href="http://localhost:8000/u/{{x.item_id.user.user.username}}">{{x.item_id.user.user.username}}</a></p>
+                    {% if x.url %}
+                    <p style="margin:0;"><a href={{x.url}}>{{x.url}}</a></p>
+                    {% endif %}
+                    <p>{{x.initial_sale_date}}</p>
+                    <p>&nbsp</p>
+                </div>
+            </div>
 {% endfor %}
 
 {% endblock content %}
