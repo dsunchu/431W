@@ -33,7 +33,7 @@ class supplier_form(forms.ModelForm):
             'phone_number',
             'category',
             'revenue']
-
+#card
 class credit_card_form(forms.ModelForm):
       class Meta:
         model = credit_cards

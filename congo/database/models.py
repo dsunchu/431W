@@ -65,7 +65,7 @@ class addresses(models.Model):
     zip_code = models.IntegerField()
     user = models.ForeignKey('RegisteredUser',on_delete=models.CASCADE,null=True)
 
-
+#card
 class credit_cards(models.Model):
     MONTH = (
         ('01','01'),
