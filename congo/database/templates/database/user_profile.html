@@ -2,7 +2,9 @@
 
 {% block content %}
 {% if user.username == registered_user.username %}
+
 <p>&nbsp</p>
+<!--
 <ul style="width:100%; margin:0 auto; list-style-type:none; padding: 0; overflow:hidden">
     <li style="float:left; padding:10px"><a href="http://localhost:8000/add_credit_card/" />Add Credit Card</a></li>
     <li style="float:left; padding:10px"><a href="http://localhost:8000/add_address/" />Add Address</a></li>
@@ -10,7 +12,20 @@
     <li style="float:left; padding:10px"><a href="http://localhost:8000/u/{{registered_user.user.username}}/create_user_list/" />Add List</a></li>
     <li style="float:left; padding:10px"><a href="http://localhost:8000/u/{{registered_user.user.username}}/view_list/" />View Lists</a></li>
     <li style="float:left; padding:10px"><a href="http://localhost:8000/u/{{registered_user.user.username}}/order_history/" />View Previous Orders</a></li>
+
+#DCDCDC
+</ul>-->
+
+<ul style="background-color:#566377;border-color:gray;border-style:solid; list-style-type:none; border-width:.5px; width:56%; height:30px; margin:0 Auto; padding:5px; margin-top:0%; margin-bottom:0%; border-radius:0px">
+    <li style="float:left; padding:0 10px;"><a href="http://localhost:8000/add_credit_card/" style="color: rgb(255,255,255)" />Add Credit Card   |</a></li>
+    <li style="float:left; padding:0 10px;"><a href="http://localhost:8000/add_address/" style="color: rgb(255,255,255)"/>Add Address   |</a></li>
+    <li style="float:left; padding:0 10px;"> <a href="http://localhost:8000/add_email/" style="color: rgb(255,255,255)"/>Add Email   |</a></li>
+    <li style="float:left; padding:0 10px;"><a href="http://localhost:8000/u/{{registered_user.user.username}}/create_user_list/" style="color: rgb(255,255,255)"/>Add List   |</a></li>
+    <li style="float:left; padding:0 10px;"><a href="http://localhost:8000/u/{{registered_user.user.username}}/view_list/" style="color: rgb(255,255,255)"/>View Lists   |</a></li>
+    <li style="float:left; padding:0 10px;"><a href="http://localhost:8000/u/{{registered_user.user.username}}/order_history/" style="color: rgb(255,255,255)"/>View Previous Orders</a></li>
 </ul>
+
+
 
 {% endif %}
 

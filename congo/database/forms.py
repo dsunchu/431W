@@ -35,11 +35,14 @@ class supplier_form(forms.ModelForm):
             'revenue']
 
 class credit_card_form(forms.ModelForm):
-    class Meta:
+      class Meta:
         model = credit_cards
         fields = ['card_number',
-                  'expiration_date',
+                 # 'expiration_date',
+                  'expiration_month',
+                  'expiration_year',
                   'security_code']
+
 
 class address_form(forms.ModelForm):
     class Meta:

@@ -67,8 +67,24 @@ class addresses(models.Model):
 
 
 class credit_cards(models.Model):
+    MONTH = (
+        ('01','01'),
+        ('02','02'),
+        ('03', '03'),
+        ('04', '04'),
+        ('05', '05'),
+        ('06', '06'),
+        ('07', '07'),
+        ('08', '08'),
+        ('09', '09'),
+        ('10', '10'),
+        ('11', '11'),
+        ('12', '12')
+    )
     card_number = models.IntegerField(primary_key=True)
-    expiration_date = models.DateField()
+    #expiration_date = models.DateField()
+    expiration_month = models.CharField(choices=MONTH, default='01', max_length=2)
+    expiration_year = models.CharField(max_length=4)
     security_code = models.IntegerField()
     user = models.ForeignKey('RegisteredUser', on_delete=models.CASCADE, null=True)
 
