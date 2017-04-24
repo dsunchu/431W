@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-# Create your models here.
+# Create your models here .
 
 
 class sells(models.Model):
@@ -65,7 +65,7 @@ class addresses(models.Model):
     zip_code = models.IntegerField()
     user = models.ForeignKey('RegisteredUser',on_delete=models.CASCADE,null=True)
 
-#card
+
 class credit_cards(models.Model):
     MONTH = (
         ('01','01'),
