@@ -57,7 +57,6 @@ class email_form(forms.ModelForm):
             'domain'
         ]
 class upload_list_item_form(forms.ModelForm):
-    #image = forms.ImageField()
     class Meta:
         model = sale_items
         fields = ['item_name',

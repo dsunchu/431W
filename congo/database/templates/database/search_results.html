@@ -15,12 +15,11 @@
 <h3 style="padding:20px">Search Results</h3>
 {% endif %}
 {% for x in query %}
-            {{x.category}}
             <div style="padding:20px; margin-left:10%;">
                 <div>
                     <img style="width:125px; height:174;float:left; padding:20px" src="https://ss7.vzw.com/is/image/VerizonWireless/iphone6s-spgry-front?fmt=jpg&bgc=f6f6f6&resmode=sharp2&qlt=80,1&wid=352&hei=717">
                     <p>&nbsp</p>
-                    <strong><a href="http://localhost:8000/items/{{x.item_id}}/purchase">{{x.item_name}}</a> - </strong>{{x.description}}
+                    <strong><a href="http://localhost:8000/items/{{x.item_id}}">{{x.item_name}}</a> - </strong>{{x.description}}
                     {% if x.item_id.type == 'A' %}
                         <strong>(Auction)</strong>
                     {% else %}
