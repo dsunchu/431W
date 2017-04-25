@@ -1,9 +1,11 @@
 {% extends "database/base.html" %}
 <!---- purchase page after user clicks purchase --->
 {% block content%}
-
+<p></p>
+<u><h3 style="padding:20px;">Order History for {{user}}</h3></u>
 {% for i in orders %}
-<table>
+<p></p>
+<table style="margin-left:20px; width:30%;">
     <tr>
         <td>Name</td>
         <td><strong>{{ i.item.item_name }}</strong></td>

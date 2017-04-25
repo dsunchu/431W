@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^sell/item_info/$', views.upload_auction_list_item, name='upload_auction_list_item'),
     url(r'^items/(?P<item_id>\w+)/purchase/$',views.purchase,name='purchase'),
     #url(r'^search_results/(?P<search>\w+)/$', views.SearchView,name='search')
-    url(r'^search_results', views.SearchView)
+    url(r'^search_results', views.SearchView),
 ]
 
 
