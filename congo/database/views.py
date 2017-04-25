@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.sessions.middleware import SessionMiddleware
 from itertools import chain
 import operator
+import operator
 import multiprocessing
 import datetime
 from .tasks import add

@@ -38,7 +38,8 @@ class credit_card_form(forms.ModelForm):
     class Meta:
         model = credit_cards
         fields = ['card_number',
-                  'expiration_date',
+                  'experation_month',
+                  'experation_year',
                   'security_code']
 
 class address_form(forms.ModelForm):
