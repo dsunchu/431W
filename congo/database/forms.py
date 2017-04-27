@@ -42,14 +42,18 @@ class credit_card_form(forms.ModelForm):
                   'expiration_year',
                   'security_code']
 
-class address_form(forms.ModelForm):
+class address_form(forms.Form):
+    street = forms.CharField(max_length=50)
+    city = forms.CharField(max_length=50)
+    zip_code = forms.IntegerField()
+    '''
     class Meta:
         model = addresses
         fields = ['street',
                   'city',
                   'zip_code'
                   ]
-
+    '''
 class email_form(forms.ModelForm):
     class Meta:
         model= emails

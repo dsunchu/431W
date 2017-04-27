@@ -179,16 +179,14 @@ def add_address(request):
     if request.method == "POST":
         form = address_form(request.POST)
         if form.is_valid():
-            form.save()
+            #form.save()
             #find corresponding user, link user to creditcard
             r = RegisteredUser.objects.get(user__username=request.user.username)
             #if form.save():
             street = form['street'].value()
             city = form['city'].value()
             zip_code = form['zip_code'].value()
-            address = addresses.objects.filter(street=street,city=city,zip_code=zip_code).latest('street')
-            address.user = r
-            address.update()
+            address = addresses.objects.create(street=street,city=city,zip_code=zip_code,user=r)
             return render(request, 'items/upload_success.html')
             #else:
                 #return render(request, 'items/upload_fail.html')
