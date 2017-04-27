@@ -24,6 +24,7 @@ class sale_items(models.Model):
     item_name = models.CharField(max_length=50)
     description = models.CharField(max_length=500)
     url = models.CharField(max_length=100, null=True, blank=True)
+    image_url = models.CharField(max_length=500, null=True, blank=True)
     place_of_origin = models.CharField(max_length=50)
     amount_in_stock = models.IntegerField()
     initial_sale_date = models.DateField()

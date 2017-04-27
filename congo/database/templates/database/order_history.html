@@ -42,7 +42,7 @@
     {% if i.aggregate_with %}
     <tr>
         <td>Shipped With</td>
-        <td><strong>{{ i.aggregate_with.item_id }}</strong></td>
+        <td><strong>Order {{ i.aggregate_with.order_id }}</strong></td>
     </tr>
     {% endif %}
 </table>
