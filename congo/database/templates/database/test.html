@@ -34,12 +34,16 @@
             <form  method="post">
             {% csrf_token %}
             {{ form.non_field_errors }}
-            <p>
-                    {{form.category}}
+
+              <div id="wrapper">
+                <div style="margin:0 auto; width:10%;display:inline-block">
+                    {{ form.category }}
+                </div>
+                <div style="display:inline-block">
                     {{ form.search }}
-            </p>
-            </form>
-            <p>&nbsp</p>
+                </div>
+              </div>
+
         </center>
 
         <ul style="float:left; color: white;display:inline-block; background-color:rgba(38, 57, 23, .00); list-style-type:none; margin:0; padding:0; overflow:hidden;">
@@ -142,7 +146,7 @@
       {% for x in neatproducts %}
       <div class="column">
         <img class="thumbnail" src="http://placehold.it/300x400">
-        
+
         <h5 style="">{{x.item_name}}</h5>
         {% if x.item_id.type == 'A' %}
           <p>Auction</p>
