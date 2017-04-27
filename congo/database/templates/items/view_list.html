@@ -7,7 +7,7 @@
 </form>
 
 {% for i in list_contents.item.all %}
-    <table style="margin: 0 auto;">
+    <table style="margin: 0 auto; border-style:solid">
         <tr>
             <td>Name</td>
             <td><strong>{{ i.item_name }}</strong></td>
@@ -33,8 +33,9 @@
             <td>Amount in Stock</td>
             <td><strong>{{ i.amount_in_stock }}</strong></td>
         </tr>
-
+        <br>
     </table>
+<br>
 {% endfor %}
 
 {% endblock content %}

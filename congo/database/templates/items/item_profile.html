@@ -2,8 +2,11 @@
 <!----displays item info, purchase button/bid item -->
 {% block content%}
 
-
-<table>
+<center>
+<div style = "border-style:none;width:50%; margin:0 auto; padding:30px; margin-top:1%; margin-bottom:1%; border-radius:10px;">
+<center><h><font size="5">Item Information </font></h></center>
+    <hr>
+    <table>
     <tr>
         <td>Name</td>
         <td><strong>{{ item.item_name }}</strong></td>
@@ -52,35 +55,46 @@
     </tr>
     {% endif %}
 </table>
+</div>
+</center>
+<center><h><font size="5">Order Options </font></h></center>
+<hr>
+<div style = "border-color:gray;border-style:solid; border-width:.5px; width:30%; margin:0 auto; padding:30px; margin-top:0%; margin-bottom:5%; border-radius:10px;">
+
 {% if s.type == 'L'%}
 <form method="POST">
     {% csrf_token %}
     {{form}}
-    <input type="submit" value="Add to Cart" onclick="item_order_page();">
+    <input type="submit" value="Add to Cart" onclick="item_order_page();" style="border-radius:5px; margin: 14px 35%; padding: 10px 30px; background-color:#566377; border:none; margin-top:1%;color:white;">
 </form>
 {% else %}
 <form method="POST">
     {% csrf_token %}
     {{form}}
-    <input type="submit" value="Place Bid">
+    <input type="submit" value="Place Bid" style="border-radius:5px; margin: 14px 35%; padding: 10px 30px; background-color:#566377; border:none; color:white;">
 </form>
 {% endif %}
+    <br>
 <form method="POST">{% csrf_token %}
     {{list}}
-    <input type="submit" value="Add to List">
+    <input type="submit" value="Add to List" style="border-radius:5px; margin: 14px 35%; padding: 10px 30px; background-color:#566377; border:none; margin-top:1%;color:white;">
 </form>
-
+<br>
 <form method="POST">{% csrf_token %}
     {{review}}
-    <input type="submit" value="Add Review">
+    <input type="submit" value="Add Review" style="border-radius:5px; margin: 14px 35%; padding: 10px 30px; background-color:#566377; border:solid; margin-top:1%;color:white;">
 </form>
-
+</div>
+<center><h><font size="5">Item Reviews</font></h></center>
+<hr>
 {% for i in item_reviews %}
+   <center>
     <table>
         <tr>
             <td>Rater</td>
             <td><strong>{{ i.rater.user.username }}</strong></td>
         </tr>
+
         <tr>
             <td>Stars</td>
             <td><strong>{{ i.stars }}</strong></td>
@@ -94,6 +108,7 @@
             <td><strong>{{ i.verified_purchase }}</strong></td>
         </tr>
     </table>
+   </center>
 {% endfor %}
 
 <script type="text/javascript">

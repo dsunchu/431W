@@ -1,13 +1,13 @@
 {% extends "database/base.html" %}
 <!---- purchase page after user clicks purchase --->
 {% block content%}
-<div>
-    <button><a href="http://localhost:8000/add_credit_card/" />Add Credit Card</a></button>
-    <button><a href="http://localhost:8000/add_address/" />Add Address</a></button>
+<div style="width:30%; margin:0 auto; text-align:center; background-color:#566377;border-color:gray;border-style:solid; list-style-type:none;margin-top:2%;  height:32px;">
+    <button><a href="http://localhost:8000/add_credit_card/" style="color: rgb(255,255,255)" />Add Credit Card |</a></button>
+    <button><a href="http://localhost:8000/add_address/" style="color: rgb(255,255,255)" />Add Address</a></button>
 </div>
-<form method="post" class="post-form" >{% csrf_token %}
+<form method="post" class="post-form" style="border-color:gray;border-style:solid; border-width:.5px; width:30%; margin:0 auto; padding:30px; margin-top:3%; margin-bottom:5%; border-radius:10px;" >{% csrf_token %}
     {{form}}
-    <button>Purchase</button>
+    <button style="border-radius:5px; margin: 14px 35%; padding: 10px 30px; background-color:#566377; border:none; color:white;">Purchase</button>
 </form>
 
 {% endblock content %}
