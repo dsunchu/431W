@@ -186,7 +186,7 @@ def add_address(request):
             street = form['street'].value()
             city = form['city'].value()
             zip_code = form['zip_code'].value()
-            address = addresses.objects.filter(street=street,city=city,zip_code=zip_code)
+            address = addresses.objects.filter(street=street,city=city,zip_code=zip_code).latest('street')
             address.user = r
             address.save()
             return render(request, 'items/upload_success.html')
@@ -470,8 +470,10 @@ def purchase(request,item_id):
                 for k in a:
                     if k.aggregate_with is not None:
                         pass
+                        print("test output 1")
                     else:
                         o.aggregate_with = k
+                        print("test output 2")
 
 
             #determine if seller is user or supplier

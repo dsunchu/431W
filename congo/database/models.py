@@ -56,7 +56,7 @@ class emails(models.Model):
 
 
 class addresses(models.Model):
-    street = models.CharField(max_length=50, primary_key=True)
+    street = models.CharField(max_length=50)
     city = models.CharField(max_length=50)
     zip_code = models.IntegerField()
     user = models.ForeignKey('RegisteredUser',on_delete=models.CASCADE,null=True)
@@ -78,7 +78,7 @@ MONTH = (
 )
 class credit_cards(models.Model):
     card_number = models.IntegerField(primary_key=True)
-    expiration_month = models.CharField(choices=MONTH, default='01', max_length=2)
+    expiration_month = models.CharField(choices=MONTH, default='01', max_length=2,blank='')
     expiration_year = models.CharField(max_length=4, default='2017')
     security_code = models.IntegerField()
     user = models.ForeignKey('RegisteredUser', on_delete=models.CASCADE, null=True)
