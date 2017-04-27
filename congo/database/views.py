@@ -5,6 +5,7 @@ from django.shortcuts import redirect, render_to_response
 from django.contrib.auth import authenticate, login, logout
 from decimal import Decimal
 from django.db.models import Q
+import random
 from django.http import HttpResponseRedirect
 from django.contrib.sessions.middleware import SessionMiddleware
 from itertools import chain
@@ -129,6 +130,11 @@ def login_user(request):
 
 
 def index_page(request):
+    newitems = sale_items.objects.all()[:4]
+    neatproducts = sale_items.objects.all()[4:10]
+    topproducts1 = sale_items.objects.all()[10:13]
+    topproducts2 = sale_items.objects.all()[13:16]
+    topproducts3 = sale_items.objects.all()[16:19]
     if request.method == 'POST':
         form = search_form(request.POST)
         if form.is_valid():
@@ -144,7 +150,7 @@ def index_page(request):
         form = search_form()
         print("logged in user ",request.user.username)
         r = RegisteredUser.objects.get(user__username=request.user.username)
-        return render(request,'database/test.html',{'registered_user':r, 'form':form})
+        return render(request,'database/test.html',{'registered_user':r, 'form':form, 'newitems':newitems, 'neatproducts':neatproducts, 'topproducts1':topproducts1, 'topproducts2':topproducts2,'topproducts3':topproducts3})
     else:
         form = search_form()
         return render(request, 'database/test.html', {'form':form})
@@ -321,6 +327,17 @@ def view_user_sale_items(request,user_name):
     registered_user = RegisteredUser.objects.get(user=u)
     registered_user.username = user_name
     user_reviews = reviews.objects.filter(ratee=registered_user)
+    user_orders = orders.objects.filter(user__user__username=user_name)
+    purchased = 0
+    cat = ''
+    suggestions = ''
+    if user_orders.count() == 0:
+        purchased = 0
+    else:
+        purchased = 1
+        cat = user_orders.first().item.category
+        y = random.randint(1, sale_items.objects.filter(category=cat).count())
+        suggestions = sale_items.objects.filter(category=cat)[y:(y + 3)]
     sum = 0
 
     items = sale_items.objects.filter(item_id__user__user__username=user_name)
@@ -343,7 +360,7 @@ def view_user_sale_items(request,user_name):
             registered_user.save()
     else:
         review = reviews_form
-    return render(request,'database/user_profile.html',{'items':items, 'registered_user':registered_user,'review':review,'reviews':user_reviews})
+    return render(request,'database/user_profile.html',{'items':items, 'registered_user':registered_user,'review':review,'reviews':user_reviews, 'purchased':purchased, 'suggestions':suggestions})
 
 
 #gets called from sell item, populates fields in sale_item table
