@@ -49,12 +49,41 @@ def auction_manager():
 def generate_weekly_sale_reports():
     #appropriate queries here###
     #havent setup sending intervals yet
+    query = categories.objects.all()
+    body_text = ''
+    for i in query:
+        body_text += 'CATEGORY NAME: '+ i.category_name + ' SALES: ' + i.number_of_items_sold + ' TOTAL ITEMS: ' + i.number_of_items_contained + '\n'
+
     send_mail(
         'subject',
-        'Body text',
+        body_text,
         'from@email.com',
         'to@email.com',
         fail_silently=False #enable out if fails
+    )
+
+@shared_task
+def generate_telemarket_reports():
+    user_query = RegisteredUser.objects.all()
+    body_text = ''
+    for i in user_query:
+        address = addresses.objects.filter(user=i)
+        email = emails.objects.filter(user=i)
+        body_text += 'user: ' + i.name + '\n'
+        body_text += 'phone: ' + i.phone_number + '\n'
+        body_text += 'age: ' + i.age + '\n'
+        body_text += 'gender: ' + i.gender + '\n'
+        body_text += 'annual income: ' + i.annual_income + '\n'
+        for w in addresses:
+            body_text += 'address: '+w.street+' '+w.city+' '+w.zip_code+'\n'
+        for k in email:
+            body_text += 'email: ' + k.address + '@' + k.domain + '\n'
+    send_mail(
+        'subject',
+        body_text,
+        'from@email.com',
+        'to@email.com',
+        fail_silently=False  # enable out if fails
     )
 
 
