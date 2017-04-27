@@ -16,9 +16,10 @@
 {% endif %}
 {% for x in query %}
             <div style="padding:20px; margin-left:10%;">
-                <div>
-                    <img style="width:125px; height:174;float:left; padding:20px" src="https://ss7.vzw.com/is/image/VerizonWireless/iphone6s-spgry-front?fmt=jpg&bgc=f6f6f6&resmode=sharp2&qlt=80,1&wid=352&hei=717">
-                    <p>&nbsp</p>
+                    <div style="float:left; width:170px; height:200px;">
+                    <img style="width:100%; height:100%; object-fit:cover; overflow:hidden; float:left; padding:20px" src={{x.image_url}}>
+                    </div>
+                    <p style="margin:0">&nbsp</p>
                     <strong><a href="http://localhost:8000/items/{{x.item_id}}">{{x.item_name}}</a> - </strong>{{x.description}}
                     {% if x.item_id.type == 'A' %}
                         <strong>(Auction)</strong>
@@ -31,8 +32,7 @@
                     <p style="margin:0;"><a href={{x.url}}>{{x.url}}</a></p>
                     {% endif %}
                     <p>{{x.initial_sale_date}}</p>
-                    <p>&nbsp</p>
-                </div>
+                <p>&nbsp</p>
             </div>
 {% endfor %}
 

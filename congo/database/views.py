@@ -188,7 +188,7 @@ def add_address(request):
             zip_code = form['zip_code'].value()
             address = addresses.objects.filter(street=street,city=city,zip_code=zip_code).latest('street')
             address.user = r
-            address.save()
+            address.update()
             return render(request, 'items/upload_success.html')
             #else:
                 #return render(request, 'items/upload_fail.html')
