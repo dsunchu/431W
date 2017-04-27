@@ -115,7 +115,7 @@ comment
 {% else %}
 <form method="POST" action="http://localhost:8000/u/{{registered_user.user.username}}/" style="margin: 0 auto; width:50%; display:block; text-align:center">{% csrf_token %}
     {{review}}
-    <input style="" type="submit" value="Add Review">
+    <input style="border-radius:5px; margin: 14px 35%; padding: 10px 30px; background-color:#566377; border:none; color:white;" type="submit" value="Add Review">
 </form>
 
 {% endif %}
@@ -136,6 +136,7 @@ comment
             <td><strong>{{ i.description }}</strong></td>
         </tr>
     </table>
+<br>
 {% endfor %}
 
 {% endblock content %}

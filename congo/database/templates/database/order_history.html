@@ -2,10 +2,15 @@
 <!---- purchase page after user clicks purchase --->
 {% block content%}
 <p></p>
-<u><h3 style="padding:20px;">Order History for {{user}}</h3></u>
+
+
+<center><h3 style="padding:20px;">Order History for {{user}}</h3></center>
+<hr>
 {% for i in orders %}
 <p></p>
-<table style="margin-left:20px; width:30%;">
+<center>
+<table style="margin-left:20px; width:30%; border-style:solid">
+
     <tr>
         <td>Name</td>
         <td><strong>{{ i.item.item_name }}</strong></td>
@@ -40,7 +45,10 @@
         <td><strong>{{ i.aggregate_with.item_id }}</strong></td>
     </tr>
     {% endif %}
+
 </table>
+</center>
+<br>
 {% endfor %}
 
 {% endblock content %}
