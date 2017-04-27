@@ -173,18 +173,19 @@ def add_address(request):
     if request.method == "POST":
         form = address_form(request.POST)
         if form.is_valid():
+            form.save()
             #find corresponding user, link user to creditcard
             r = RegisteredUser.objects.get(user__username=request.user.username)
-            if form.save():
-                street = form['street'].value()
-                city = form['city'].value()
-                zip_code = form['zip_code'].value()
-                address = addresses.objects.get(street=street,city=city,zip_code=zip_code)
-                address.user = r
-                address.save()
-                return render(request, 'items/upload_success.html')
-            else:
-                return render(request, 'items/upload_fail.html')
+            #if form.save():
+            street = form['street'].value()
+            city = form['city'].value()
+            zip_code = form['zip_code'].value()
+            address = addresses.objects.filter(street=street,city=city,zip_code=zip_code)
+            address.user = r
+            address.save()
+            return render(request, 'items/upload_success.html')
+            #else:
+                #return render(request, 'items/upload_fail.html')
     else:
         form = address_form
         #use same template as add creditcard
@@ -249,9 +250,11 @@ def item_page(request,item_id):
             form = purchase_amount_form(request.POST)
             if form.is_valid():
                 request.session['amount'] = form['amount'].value()
-                #print(form['amount'].value())
-                url = 'http://localhost:8000/items/' + item_id + '/purchase/'
-                return redirect(url)
+                if i.amount_in_stock == 0:
+                    return render(request,'items/out_of_stock.html')
+                else:
+                    url = 'http://localhost:8000/items/' + item_id + '/purchase/'
+                    return redirect(url)
 
         else:
             form = place_bid_form(request.POST)
@@ -269,7 +272,7 @@ def item_page(request,item_id):
                     return render(request, 'items/upload_success.html')
                 else:
                     return render(request, 'items/upload_fail.html')
-
+        #add review
         if review.is_valid():
             print("creating review for item ",s.item_id)
             r = reviews.objects.create(stars = review['stars'].value(),
@@ -355,7 +358,11 @@ def upload_auction_list_item(request):
                 if form.save():
                     item = sale_items.objects.get(item_name=form['item_name'].value(), description=form['description'].value())
                     item.item_id = seller
+                    item.valid_auction = 1
                     item.save()
+                    category = item.category
+                    category.number_of_items_contained += 1
+                    category.save()
                     return render(request,'items/upload_success.html')
                 else:
                     return render(request,'items/upload_fail.html')
@@ -368,6 +375,9 @@ def upload_auction_list_item(request):
                     item.item_id = seller
                     item.save()
                     print(item.item_id.item_id)
+                    category = item.category
+                    category.number_of_items_contained += 1
+                    category.save()
                     return render(request,'items/upload_success.html')
                 else:
                     return render(request,'items/upload_fail.html')
@@ -437,7 +447,7 @@ def purchase(request,item_id):
             #set order info
             o.user = r
             o.item = i
-
+            o.amount = request.session['amount']
             #set aggregate if query exists
             if a is not None:
                 for k in a:
@@ -459,6 +469,12 @@ def purchase(request,item_id):
             else:
                 o.item_cost = i.current_bid
 
+            #increment categories and decrement amounts
+            category = i.category
+            category.number_of_items_sold += int(request.session['amount'])
+            i.amount_in_stock -= int(request.session['amount'])
+            category.save()
+            i.save()
             o.save()
             return render(request, 'items/upload_success.html')
             #else:
@@ -487,16 +503,22 @@ def view_user_list(request,user_name):
 @login_required(login_url='http://localhost:8000/login/')
 def create_user_list(request,user_name):
     u = RegisteredUser.objects.get(user__username=request.user.username)
-
+    same_name = ''
     if request.method == "POST":
         form = add_list_form(request.POST)
         if form.is_valid():
+            user_lists = user_list.objects.filter(user = u)
+            if user_list is not None:
+                for i in user_list:
+                    if i.list_name == form['item_list'].value():
+                        same_name= 'Please Use a New List Name'
+                        return render(request,'items/add_list.html',{'form':form, 'same_name':same_name})
             list = user_list.objects.create(list_name=form['list_name'].value(), user = u)
             list.save()
             return render(request, 'items/upload_success.html')
     else:
         form = add_list_form
-    return render(request, 'items/add_list.html',{'form':form})
+    return render(request, 'items/add_list.html',{'form':form,'same_name':same_name})
 
 
 #Trying to implement search
@@ -519,4 +541,39 @@ def SearchView(request):
 def display_orders(request,user_name):
     o = orders.objects.filter(user__user__username=user_name)
     return render(request,'database/order_history.html',{'orders':o})
+
+def cancel_item(request,item_id):
+    item = sale_items.objects.get(item_id__item_id=item_id)
+    item.amount_in_stock = 0
+    item.save()
+    return render(request,'items/item_canceled.html',{'item':item})
+
+def relist_item(request,item_id):
+    item = sale_items.objects.get(item_id__item_id=item_id)
+    if request.method == "POST":
+        if item.item_id.type == 'A':
+            form = relist_auction_form(request.POST)
+            if form.is_valid():
+                item.amount_in_stock = form['item_amount'].value()
+                item.reserve_price = form['auction_reserve'].value()
+                item.valid_auction = 1
+                item.auction_end_date = form['auction_end_date'].value()
+                item.auction_end_time = form['auction_end_time'].value()
+                item.current_bid = 0
+                item.save()
+                return render(request,'items/upload_success.html')
+        if item.item_id.type == 'L':
+            form = relist_list_form(request.POST)
+            if form.is_valid():
+                item.amount_in_stock = form['item_amount'].value()
+                item.listed_price = form['item_price'].value()
+                item.save()
+                return render(request,'items/upload_success.html')
+    else:
+        if item.item_id.type == 'A':
+            form = relist_auction_form
+        else:
+            form = relist_list_form
+    return render(request,'items/item_relist.html',{'form':form})
+
 
