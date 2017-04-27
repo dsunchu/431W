@@ -62,6 +62,11 @@ class addresses(models.Model):
     zip_code = models.IntegerField()
     user = models.ForeignKey('RegisteredUser',on_delete=models.CASCADE,null=True)
 
+class new_addresses(models.Model):
+    street = models.CharField(max_length=50)
+    city = models.CharField(max_length=50)
+    zip_code = models.IntegerField()
+    user = models.ForeignKey('RegisteredUser',on_delete=models.CASCADE,null=True)
 
 MONTH = (
     ('01', '01'),

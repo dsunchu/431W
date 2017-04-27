@@ -110,7 +110,7 @@ def credit_card_choices(self,username):
     return choices
 
 class orders_form(forms.Form):
-    ship_date = forms.DateField()
+    ship_date = forms.DateField(help_text='YYYY-MM-DD')
     class Meta:
         model = orders
         fields = ['credit_card','ship_date','ship_address']
@@ -127,7 +127,7 @@ class orders_form(forms.Form):
                                                             credit_cards.objects.filter(user__user__username=username)])
            self.fields['ship_address'] = forms.ChoiceField(label="Addresses",
                                                    choices=[(x.street, x.street) for x in
-                                                            addresses.objects.filter(user__user__username=username)])
+                                                            new_addresses.objects.filter(user__user__username=username)])
 
 
 

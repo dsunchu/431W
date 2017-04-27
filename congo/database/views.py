@@ -186,7 +186,7 @@ def add_address(request):
             street = form['street'].value()
             city = form['city'].value()
             zip_code = form['zip_code'].value()
-            address = addresses.objects.create(street=street,city=city,zip_code=zip_code,user=r)
+            address = new_addresses.objects.create(street=street,city=city,zip_code=zip_code,user=r)
             return render(request, 'items/upload_success.html')
             #else:
                 #return render(request, 'items/upload_fail.html')
@@ -463,6 +463,7 @@ def purchase(request,item_id):
             o.user = r
             o.item = i
             o.amount = request.session['amount']
+            o.tracking_number = 1000000000 - o.order_id
             #set aggregate if query exists
             if a is not None:
                 for k in a:
