@@ -15,16 +15,23 @@
 comment
 </ul>-->
 
-<ul style="width:70%; margin:0 auto; text-align:center; background-color:#566377;border-color:gray;border-style:solid; list-style-type:none;  height:32px;">
-    <div style="width:70%; margin: 0 auto; text-align:center; ">
+<ul style="z-index:100; border-radius:4px;margin-left:3%; position:fixed; text-align:center; background-color:#566377; list-style-type:none; width:10%;">
+    <li style=" padding:10px"; ><a style="color:white;" href="http://localhost:8000/add_credit_card/" />Add Credit Card</a></li>
+    <li style="padding:10px"><a style="color:white;" href="http://localhost:8000/add_address/" />Add Address</a></li>
+    <li style="padding:10px"> <a style="color:white;" href="http://localhost:8000/add_email/" />Add Email</a></li>
+    <li style="padding:10px"><a style="color:white;" href="http://localhost:8000/u/{{registered_user.user.username}}/create_user_list/" />Add List</a></li>
+    <li style="padding:10px"><a style="color:white;" href="http://localhost:8000/u/{{registered_user.user.username}}/view_list/" />View Lists</a></li>
+    <li style="padding:10px"><a style="color:white;" href="http://localhost:8000/u/{{registered_user.user.username}}/order_history/" />View Previous Orders</a></li>
+</ul>
+
+<!--<ul style="list-style-type:none; overflow:hidden; width:100%;">
     <li style="float:left; padding:0 10px;"><a href="http://localhost:8000/add_credit_card/" style="color: rgb(255,255,255)" />Add Credit Card   |</a></li>
     <li style="float:left; padding:0 10px;"><a href="http://localhost:8000/add_address/" style="color: rgb(255,255,255)"/>Add Address   |</a></li>
     <li style="float:left; padding:0 10px;"> <a href="http://localhost:8000/add_email/" style="color: rgb(255,255,255)"/>Add Email   |</a></li>
     <li style="float:left; padding:0 10px;"><a href="http://localhost:8000/u/{{registered_user.user.username}}/create_user_list/" style="color: rgb(255,255,255)"/>Add List   |</a></li>
     <li style="float:left; padding:0 10px;"><a href="http://localhost:8000/u/{{registered_user.user.username}}/view_list/" style="color: rgb(255,255,255)"/>View Lists   |</a></li>
     <li style="float:left; padding:0 10px;"><a href="http://localhost:8000/u/{{registered_user.user.username}}/order_history/" style="color: rgb(255,255,255)"/>View Previous Orders</a></li>
-</div>
-</ul>
+</ul>-->
 
 
 
@@ -101,8 +108,24 @@ comment
             <td>Amount in Stock</td>
             <td><strong>{{ i.amount_in_stock }}</strong></td>
         </tr>
+        <tr>
+            <td></td>
+            <td><a href="http://localhost:8000/items/{{i.item_id.item_id}}/"/>Item Link</a></td>
+        </tr>
+        {% if i.amount_in_stock == 0 %}
+        <tr>
+            <td></td>
+            <td><a href="http://localhost:8000/items/{{i.item_id.item_id}}/relist/"/>Relist Item</a></td>
+        </tr>
+        {% else %}
+        <tr>
+            <td></td>
+            <td><a href="http://localhost:8000/items/{{i.item_id.item_id}}/cancel/"/>Cancel Item</a></td>
+        </tr>
+        {% endif %}
 
     </table>
+    <p>&nbsp</p>
 {% endfor %}
 
 
@@ -115,7 +138,7 @@ comment
 {% else %}
 <form method="POST" action="http://localhost:8000/u/{{registered_user.user.username}}/" style="margin: 0 auto; width:50%; display:block; text-align:center">{% csrf_token %}
     {{review}}
-    <input style="" type="submit" value="Add Review">
+    <input style="border-radius:5px; margin: 14px 35%; padding: 10px 30px; background-color:#566377; border:none; color:white;" type="submit" value="Add Review">
 </form>
 
 {% endif %}
@@ -136,6 +159,41 @@ comment
             <td><strong>{{ i.description }}</strong></td>
         </tr>
     </table>
+<br>
 {% endfor %}
+
+<!-- Purchase suggestions displayed when a user views their own profile -->
+
+{% if user.username == registered_user.username %}
+    <p>&nbsp</p>
+    <h3 style="text-align:center;">Purchase Suggestions</h3>
+    <hr>
+    {% if purchased == 1 %}
+        {% for x in suggestions %}
+
+            <div style="width:50%; margin:0 auto;">
+                <div>
+                    <img style="width:125px; height:174;float:left; padding:20px" src="https://ss7.vzw.com/is/image/VerizonWireless/iphone6s-spgry-front?fmt=jpg&bgc=f6f6f6&resmode=sharp2&qlt=80,1&wid=352&hei=717">
+                    <p>&nbsp</p>
+                    <strong><a href="http://localhost:8000/items/{{x.item_id}}">{{x.item_name}}</a> - </strong>{{x.description}}
+                    {% if x.item_id.type == 'A' %}
+                        <strong>(Auction)</strong>
+                    {% else %}
+                    <strong>(${{x.listed_price}})</strong>
+                    {% endif %}
+                    <p style="margin:0;">Ships from: {{x.place_of_origin}}</p>
+                    <p>Sold by: <a href="http://localhost:8000/u/{{x.item_id.user.user.username}}">{{x.item_id.user.user.username}}</a></p>
+                    {% if x.url %}
+                    <p style="margin:0;"><a href={{x.url}}>{{x.url}}</a></p>
+                    {% endif %}
+                    <p>{{x.initial_sale_date}}</p>
+                    <p>&nbsp</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="text-align:center;">You've made no purchases!</p>
+    {% endif %}
+{% endif %}
 
 {% endblock content %}

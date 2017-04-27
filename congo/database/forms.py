@@ -38,8 +38,8 @@ class credit_card_form(forms.ModelForm):
     class Meta:
         model = credit_cards
         fields = ['card_number',
-                  'experation_month',
-                  'experation_year',
+                  'expiration_month',
+                  'expiration_year',
                   'security_code']
 
 class address_form(forms.ModelForm):
@@ -161,3 +161,12 @@ class search_form(forms.Form):
     category = forms.ModelChoiceField(options, initial={'All':'All'}, label='')
     search = forms.CharField(max_length=100, label='', required=False, widget=forms.TextInput(attrs={'placeholder': 'Search our inventory...'}))
 
+class relist_list_form(forms.Form):
+    item_amount = forms.IntegerField()
+    item_price = forms.DecimalField(max_digits=8,decimal_places=2)
+
+class relist_auction_form(forms.Form):
+    item_amount = forms.IntegerField()
+    auction_reserve = forms.DecimalField(max_digits=8,decimal_places=2)
+    auction_end_date = forms.DateField(help_text='YYYY-MM-DD')
+    auction_end_time = forms.TimeField(help_text='24:00')

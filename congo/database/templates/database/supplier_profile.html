@@ -1,6 +1,10 @@
 {% extends 'database/base.html' %}
 {% block content %}
+
 <form method="post">
+    <br>
+<center>
+    <h><font size="5">Supplier Overview</font></h>
     <table>
         <tr>
             <td>Company Name</td>
@@ -27,5 +31,6 @@
             <td><strong>{{ supplier.revenue }}</strong></td>
         </tr>
     </table>
+</center>
 </form>
 {% endblock content %}

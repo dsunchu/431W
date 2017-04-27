@@ -34,6 +34,7 @@
             <form  method="post">
             {% csrf_token %}
             {{ form.non_field_errors }}
+
               <div id="wrapper">
                 <div style="margin:0 auto; width:10%;display:inline-block">
                     {{ form.category }}
@@ -42,6 +43,7 @@
                     {{ form.search }}
                 </div>
               </div>
+
         </center>
         <ul style="float:left; color: white;display:inline-block; background-color:rgba(38, 57, 23, .00); list-style-type:none; margin:0; padding:0; overflow:hidden;">
             {% if user.is_authenticated == 1 %}
@@ -102,41 +104,35 @@
     </div>
 
     <div class="row small-up-2 large-up-4">
+      {% for x in newitems %}
       <div class="column">
         <img class="thumbnail" src="http://placehold.it/300x400">
-        <h5>Nulla At Nulla Justo, Eget</h5>
-        <p>$400</p>
+        <h5>{{x.item_name}}</h5>
+        {% if x.item_id.type == 'A' %}
+        <p>Auction</p>
+        {% else %}
+        <p>${{x.listed_price}}</p>
+        {% endif %}
         <!--linked this button to a auction item change this on local copies -->
-        <a href="http://localhost:8000/items/8/" class="button expanded"/>Bid</a>
+        <a href="http://localhost:8000/items/{{x.item_id}}" class="button expanded"/>
+        {% if x.item_id.type == 'A' %}
+        Bid
+        {% else %}
+        Buy
+        {% endif %}
+        </a>
       </div>
-      <div class="column">
-        <img class="thumbnail" src="http://placehold.it/300x400">
-        <h5>Nulla At Nulla Justo, Eget</h5>
-        <p>$400</p>
-        <!--linked this button to a listed price item change this on local copies -->
-        <a href="http://localhost:8000/items/7/" class="button expanded"/>Buy</a>
-      </div>
-      <div class="column">
-        <img class="thumbnail" src="http://placehold.it/300x400">
-        <h5>Nulla At Nulla Justo, Eget</h5>
-        <p>$400</p>
-        <a href="#" class="button expanded">Buy</a>
-      </div>
-      <div class="column">
-        <img class="thumbnail" src="http://placehold.it/300x400">
-        <h5>Nulla At Nulla Justo, Eget</h5>
-        <p>$400</p>
-        <a href="#" class="button expanded">Buy</a>
-      </div>
+      {% endfor %}
     </div>
 
     <hr>
-
+    <p>&nbsp</p>
     <div class="row column">
-      <div class="callout primary">
+      <div style="text-align:center;"   class="callout primary">
         <h3>Really big special this week on items.</h3>
       </div>
     </div>
+    <p>&nbsp</p>
 
     <hr>
 
@@ -146,135 +142,66 @@
     </div>
 
     <div class="row small-up-2 medium-up-3 large-up-6">
+      {% for x in neatproducts %}
       <div class="column">
         <img class="thumbnail" src="http://placehold.it/300x400">
-        <h5>Nulla At Nulla Justo, Eget</h5>
-        <p>$400</p>
-        <a href="#" class="button small expanded hollow">Buy</a>
+        
+        <h5 style="">{{x.item_name}}</h5>
+        {% if x.item_id.type == 'A' %}
+          <p>Auction</p>
+          <a href="http://localhost:8000/items/{{x.item_id}}" class="button small expanded hollow">Bid</a>
+        {% else %}
+          <p>${{x.listed_price}}</p>
+          <a href="http://localhost:8000/items/{{x.item_id}}" class="button small expanded hollow">Buy</a>
+        {% endif %}
+
       </div>
-      <div class="column">
-        <img class="thumbnail" src="http://placehold.it/300x400">
-        <h5>Nulla At Nulla Justo, Eget</h5>
-        <p>$400</p>
-        <a href="#" class="button small expanded hollow">Buy</a>
-      </div>
-      <div class="column">
-        <img class="thumbnail" src="http://placehold.it/300x400">
-        <h5>Nulla At Nulla Justo, Eget</h5>
-        <p>$400</p>
-        <a href="#" class="button small expanded hollow">Buy</a>
-      </div>
-      <div class="column">
-        <img class="thumbnail" src="http://placehold.it/300x400">
-        <h5>Nulla At Nulla Justo, Eget</h5>
-        <p>$400</p>
-        <a href="#" class="button small expanded hollow">Buy</a>
-      </div>
-      <div class="column">
-        <img class="thumbnail" src="http://placehold.it/300x400">
-        <h5>Nulla At Nulla Justo, Eget</h5>
-        <p>$400</p>
-        <a href="#" class="button small expanded hollow">Buy</a>
-      </div>
-      <div class="column">
-        <img class="thumbnail" src="http://placehold.it/300x400">
-        <h5>Nulla At Nulla Justo, Eget</h5>
-        <p>$400</p>
-        <a href="#" class="button small expanded hollow">Buy</a>
-      </div>
+      {% endfor %}
     </div>
 
     <hr>
     <div class="row">
       <div class="medium-4 columns">
         <h4>Top Products</h4>
+        {% for x in topproducts1 %}
         <div class="media-object">
           <div class="media-object-section">
             <img class="thumbnail" src="http://placehold.it/100x100">
           </div>
           <div class="media-object-section">
-            <h5>Nunc Eu Ullamcorper Orci</h5>
-            <p>Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque.</p>
+            <h5><a href="http://localhost:8000/items/{{x.item_id}}">{{x.item_name}}</a></h5>
+            <p>{{x.description}}</p>
           </div>
         </div>
-        <div class="media-object">
-          <div class="media-object-section">
-            <img class="thumbnail" src="http://placehold.it/100x100">
-          </div>
-          <div class="media-object-section">
-            <h5>Nunc Eu Ullamcorper Orci</h5>
-            <p>Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque.</p>
-          </div>
-        </div>
-        <div class="media-object">
-          <div class="media-object-section">
-            <img class="thumbnail" src="http://placehold.it/100x100">
-          </div>
-          <div class="media-object-section">
-            <h5>Nunc Eu Ullamcorper Orci</h5>
-            <p>Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque.</p>
-          </div>
-        </div>
+        {% endfor %}
       </div>
       <div class="medium-4 columns">
         <h4>Top Products</h4>
+        {% for x in topproducts2 %}
         <div class="media-object">
           <div class="media-object-section">
             <img class="thumbnail" src="http://placehold.it/100x100">
           </div>
           <div class="media-object-section">
-            <h5>Nunc Eu Ullamcorper Orci</h5>
-            <p>Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque.</p>
+            <h5><a href="http://localhost:8000/items/{{x.item_id}}">{{x.item_name}}</a></h5>
+            <p>{{x.description}}</p>
           </div>
         </div>
-        <div class="media-object">
-          <div class="media-object-section">
-            <img class="thumbnail" src="http://placehold.it/100x100">
-          </div>
-          <div class="media-object-section">
-            <h5>Nunc Eu Ullamcorper Orci</h5>
-            <p>Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque.</p>
-          </div>
-        </div>
-        <div class="media-object">
-          <div class="media-object-section">
-            <img class="thumbnail" src="http://placehold.it/100x100">
-          </div>
-          <div class="media-object-section">
-            <h5>Nunc Eu Ullamcorper Orci</h5>
-            <p>Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque.</p>
-          </div>
-        </div>
+        {% endfor %}
       </div>
       <div class="medium-4 columns">
         <h4>Top Products</h4>
+        {% for x in topproducts3 %}
         <div class="media-object">
           <div class="media-object-section">
             <img class="thumbnail" src="http://placehold.it/100x100">
           </div>
           <div class="media-object-section">
-            <h5>Nunc Eu Ullamcorper Orci</h5>
-            <p>Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque.</p>
+            <h5><a href="http://localhost:8000/items/{{x.item_id}}">{{x.item_name}}</a> </h5>
+            <p>{{x.description}}</p>
           </div>
         </div>
-        <div class="media-object">
-          <div class="media-object-section">
-            <img class="thumbnail" src="http://placehold.it/100x100">
-          </div>
-          <div class="media-object-section">
-            <h5>Nunc Eu Ullamcorper Orci</h5>
-            <p>Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque.</p>
-          </div>
-        </div>
-        <div class="media-object">
-          <div class="media-object-section">
-            <img class="thumbnail" src="http://placehold.it/100x100">
-          </div>
-          <div class="media-object-section">
-            <h5>Nunc Eu Ullamcorper Orci</h5>
-            <p>Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque.</p>
-          </div>
-        </div>
+        {% endfor %}
       </div>
     </div>
 
