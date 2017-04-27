@@ -5,6 +5,7 @@ from django.shortcuts import redirect, render_to_response
 from django.contrib.auth import authenticate, login, logout
 from decimal import Decimal
 from django.db.models import Q
+import random
 from django.http import HttpResponseRedirect
 from django.contrib.sessions.middleware import SessionMiddleware
 from itertools import chain
@@ -326,6 +327,17 @@ def view_user_sale_items(request,user_name):
     registered_user = RegisteredUser.objects.get(user=u)
     registered_user.username = user_name
     user_reviews = reviews.objects.filter(ratee=registered_user)
+    user_orders = orders.objects.filter(user__user__username=user_name)
+    purchased = 0
+    cat = ''
+    suggestions = ''
+    if user_orders.count() == 0:
+        purchased = 0
+    else:
+        purchased = 1
+        cat = user_orders.first().item.category
+        y = random.randint(1, sale_items.objects.filter(category=cat).count())
+        suggestions = sale_items.objects.filter(category=cat)[y:(y + 3)]
     sum = 0
 
     items = sale_items.objects.filter(item_id__user__user__username=user_name)
@@ -348,7 +360,7 @@ def view_user_sale_items(request,user_name):
             registered_user.save()
     else:
         review = reviews_form
-    return render(request,'database/user_profile.html',{'items':items, 'registered_user':registered_user,'review':review,'reviews':user_reviews})
+    return render(request,'database/user_profile.html',{'items':items, 'registered_user':registered_user,'review':review,'reviews':user_reviews, 'purchased':purchased, 'suggestions':suggestions})
 
 
 #gets called from sell item, populates fields in sale_item table
