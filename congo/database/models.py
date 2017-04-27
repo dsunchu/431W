@@ -78,8 +78,8 @@ MONTH = (
 )
 class credit_cards(models.Model):
     card_number = models.IntegerField(primary_key=True)
-    experation_month = models.CharField(choices=MONTH, default='01', max_length=2)
-    experation_year = models.CharField(max_length=4, default='2017')
+    expiration_month = models.CharField(choices=MONTH, default='01', max_length=2)
+    expiration_year = models.CharField(max_length=4, default='2017')
     security_code = models.IntegerField()
     user = models.ForeignKey('RegisteredUser', on_delete=models.CASCADE, null=True)
 

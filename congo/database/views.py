@@ -129,6 +129,11 @@ def login_user(request):
 
 
 def index_page(request):
+    newitems = sale_items.objects.all()[:4]
+    neatproducts = sale_items.objects.all()[4:10]
+    topproducts1 = sale_items.objects.all()[10:13]
+    topproducts2 = sale_items.objects.all()[13:16]
+    topproducts3 = sale_items.objects.all()[16:19]
     if request.method == 'POST':
         form = search_form(request.POST)
         if form.is_valid():
@@ -144,7 +149,7 @@ def index_page(request):
         form = search_form()
         print("logged in user ",request.user.username)
         r = RegisteredUser.objects.get(user__username=request.user.username)
-        return render(request,'database/test.html',{'registered_user':r, 'form':form})
+        return render(request,'database/test.html',{'registered_user':r, 'form':form, 'newitems':newitems, 'neatproducts':neatproducts, 'topproducts1':topproducts1, 'topproducts2':topproducts2,'topproducts3':topproducts3})
     else:
         form = search_form()
         return render(request, 'database/test.html', {'form':form})
