@@ -101,6 +101,17 @@ comment
             <td>Amount in Stock</td>
             <td><strong>{{ i.amount_in_stock }}</strong></td>
         </tr>
+        {% if i.amount_in_stock == 0 %}
+        <tr>
+            <td></td>
+            <td><a href="http://localhost:8000/items/{{i.item_id.item_id}}/relist/"/>Relist Item</a></td>
+        </tr>
+        {% else %}
+        <tr>
+            <td></td>
+            <td><a href="http://localhost:8000/items/{{i.item_id.item_id}}/cancel/"/>Cancel Item</a></td>
+        </tr>
+        {% endif %}
 
     </table>
 {% endfor %}

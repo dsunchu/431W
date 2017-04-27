@@ -20,6 +20,8 @@ urlpatterns = [
     url(r'^add_email/$',views.add_email,name='add_email'),
     #items
     url(r'^items/(?P<item_id>\w+)/$', views.item_page, name='item_page'),
+    url(r'^items/(?P<item_id>\w+)/cancel/$', views.cancel_item, name='cancel_item'),
+    url(r'^items/(?P<item_id>\w+)/relist/$', views.relist_item, name='relist_item'),
     url(r'^sell/$', views.sell_item, name='sell_item'),
     url(r'^sell/item_info/$', views.upload_auction_list_item, name='upload_auction_list_item'),
     url(r'^items/(?P<item_id>\w+)/purchase/$',views.purchase,name='purchase'),
