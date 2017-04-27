@@ -34,16 +34,15 @@
             <form  method="post">
             {% csrf_token %}
             {{ form.non_field_errors }}
-                <div style="margin:0 auto; width:10%;">
+              <div id="wrapper">
+                <div style="margin:0 auto; width:10%;display:inline-block">
                     {{ form.category }}
                 </div>
-                <div>
+                <div style="display:inline-block">
                     {{ form.search }}
                 </div>
-            </form>
-            <p>&nbsp</p>
+              </div>
         </center>
-
         <ul style="float:left; color: white;display:inline-block; background-color:rgba(38, 57, 23, .00); list-style-type:none; margin:0; padding:0; overflow:hidden;">
             {% if user.is_authenticated == 1 %}
           <li style="float:left; padding:12px 30px; display:block;"><b>Welcome, {{ user.username }}</b></li>
