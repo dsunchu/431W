@@ -101,6 +101,10 @@ comment
             <td>Amount in Stock</td>
             <td><strong>{{ i.amount_in_stock }}</strong></td>
         </tr>
+        <tr>
+            <td></td>
+            <td><a href="http://localhost:8000/items/{{i.item_id.item_id}}/"/>Item Link</a></td>
+        </tr>
         {% if i.amount_in_stock == 0 %}
         <tr>
             <td></td>
